@@ -1,0 +1,44 @@
+
+ ******* Example 02_2 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+ Trans-cis isomerization of But-2-ene.
+ To check cis-trans isomerisation, see example #02_1 
+
+ This example aims to compare the TST rate constants calulated with NAST
+ to rate constants calculated with MESMER 6.0 (downloaded February 23, 2021i for Windows) using
+ MESMER's data from "examples" folder. Input data was taken from "cis_to_trans_But-2-ene.xml".
+ Results are given in mesmer.test after executing the program.
+ Check NAST Manual, Chapter 5, example #2 for details.
+
+  >>>>> Canonical TST rate constants at various temperatures (given maxn = 45000) <<<<<
+
+   MESMER: k(trans-to-cis) = 0.54 s-1 at T = 1000 K
+   NAST:   k(trans-to-cis) = 0.38 s-1 at T = 1000 K
+
+   MESMER: k(trans-to-cis) = 8.99 x 10^2 s-1 at T = 1300 K
+   NAST:   k(trans-to-cis) = 7.76 x 10^2 s-1 at T = 1300 K
+
+   MESMER: k(trans-to-cis) = 6.27 x 10^4 s-1 at T = 1600 K
+   NAST:   k(trans-to-cis) = 9.52 x 10^4 s-1 at T = 1600 K
+
+ Input data below this line
+
+$keys zpe = 1 printmore = .true. tst = .true. &end 
+
+&inputdata
+freX=131, 131, 304, 304, 304, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1340, 1340, 1340, 1452, 1452, 1452, 1452, 1452, 1672, 2976, 2976, 2976, 2976, 2976, 2976, 2976, 2976
+inertX=109.86829, 396.10409, 396.10409
+freR=210, 210, 240, 290, 501, 750, 866, 964, 973, 1030, 1039, 1065, 1146, 1302, 1309, 1380, 1385, 1449, 1449, 1457, 1457, 1680, 2930, 2950, 2950, 2950, 2950, 2954, 3011, 3050
+inertR=51.45966, 485.54674, 514.59657
+enX = 0.103497d0
+enR = 0.0d0
+!maxn=45000 ! Right integration limit.
+maxn = 23000 ! Not enough for convergence in rates. Only for test purposes. 
+T1=100
+Tstep=100
+T2=2000
+&end
+

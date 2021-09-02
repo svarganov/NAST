@@ -1,0 +1,34 @@
+			
+			     August 28, 2021
+
+			University of Nevada, Reno
+			  Varganov Research Group
+
+
+  Below are the instructions to test complilation of the NAST source code.
+
+Please do the following:
+
+1) Compile the NAST source code by
+
+   1. cd ~/path-to-nast-code on your computer.
+   2. Execute './configure.py --lib_path=/path/to/math_library'.
+     (Execute './configure --help' to see all configure flags.)
+   3. Execute 'make' and then 'make clean' (optional).
+   
+   You should now have the 'nast.x' executable in the installation directory.
+ 
+2) Test compilation by executing the script 'checknast'
+
+   (1. cd ~/path-to-nast-code on your computer.)
+   2. cd checkcomp
+   3. ./checknast
+
+You should now see a running loop over the test examples. If successful,
+an example will terminate with the '....Passed'. If the test results
+differ from the pre-stored values, you will see that the test '....Failed'.
+If an input file is corrupted, you will be recommended to verify your input.
+
+Note: For test purposes, energy limits of some examples are lowered
+to ensure passing of test examples. Feel free to increase
+the maxn parameter to ensure convergence.

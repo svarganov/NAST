@@ -1,0 +1,45 @@
+
+ ******* Example 07 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+ Minimal Test for Landau-Zener component-specific (split) probabilities, LZS.
+ 
+   >>>>> Results at 220 cm-1 <<<<<
+
+ >>>> LZS probabilities <<<<
+
+ 1: 2.25-02
+ 2: 0.18
+
+Input data below this line
+
+$keys sp = .true. &end 
+
+&inputdata
+freX = 160.48, 184.62, 496.76, 660.16, 861.95, 1512.37, 1745.93, 3791.65
+freR = 173.33, 201.6, 384.59, 467.52, 809.98, 1465.39, 1743.93, 1858.80, 3788.07 
+inertX = 32.30445, 327.76136, 360.06578
+inertR = 30.53572, 339.11017, 369.64570
+enX = 0.001 
+enR = 0
+maxn = 10000
+T1 = 290
+T2 = 291
+Tstep = 1
+&end
+
+&probability
+redmass = 1.03252
+soc = 68.18
+grad = 0.055701
+gradmean = 0.015884
+&end
+
+&split
+mults = 1,3
+icp = 2
+socmat = (0,-15.672),(33.6871,32.6618)
+&end

@@ -1,0 +1,105 @@
+
+ ******* Example 05 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+In this example we test microcanonical NAST coupled with the Zhu-Nakamura transition probability.
+We test our Zhu-Nakamura implementation for sloped-type ISC.
+We apply ZPE II scheme to account for turning points below ZPE.
+
+T1 to S0 relaxation in thiophosgene in tunneling regime.
+Example is based on A.O. Lykhin and S.A. Varganov, Phys. Chem. Chem. Phys., 2020, 22, 5500-5508.
+In this example, authors compare their theoretical results with experimental lifetimes of lowest vibrational states
+of the excited triplet state, T1. The experiment was conducted using the optical-optical double resonance technique.
+
+Details of experiments can be found in
+
+1. Fujiwara, T.; Moule, D. C.; Lim, E. C. Chemical Physics Letters 2004, 389 (1-3), 165-170.
+2. Fujiwara, T.; Lim, E. C. J Chem Phys 2008, 129 (4), 041102.
+
+The energies of these vibrational states, T1(\nu), are far below MECP. Therefore, T1(\nu) -> S0 relaxations are solely
+due to tunneling.
+
+The search of equilibrium geometry of T1, MECP search, consequent vibrational anylyses and IRC calculations were
+performed at the CASPT2(10,9)/def2-TZVP level of theory.
+Spin-orbit coupling constant, calculated at the MECP using the CASCI(20,14) method, is of 155 cm-1.
+However, we use the soc value of 189 cm-1 as in the energy range of interest.
+The 1-D crossing potentials, fitted to Molpro IRC points, were obtained using our Matlab prototype code, because
+our Fortran IRC fit code is currently interfaced only to GAMESS electronic structure program.
+
+ 
+   >>>>> Microcanonical rates at lowest vibrational states of T1 <<<<<
+
+
+  T1(0^0): 0th vibrational mode: \nu = 0.26 cm-1. In calculation, rounded to 0 cm-1.
+   
+			   E    = 0 cm-1
+  			   k_WC = 7.87 x 10^5 s-1
+			   k_ZN = 6.07 x 10^1 s-1
+			   Exp.   4.40 x 10^7 s-1
+
+  T1(3^1): 3d vibrational mode: \nu = 246.56 cm-1. In calculation, rounded to 247 cm-1.
+
+			   E    = 247 cm-1
+			   k_WC = 1.66 x 10^8 s-1 
+			   k_ZN = 7.14 x 10^4 s-1
+			   Exp.   5.90 x 10^7 s-1
+
+  T1(3^2), 3d vibrational mode, 1st overtone: \nu = 494 cm-1. No need in rounding.
+
+		           E    = 494 cm-1
+    			   k_WC = 4.31 x 10^8 s-1 
+			   k_ZN = 6.29 x 10^5 s-1
+			   Exp.   8.00 x 10^7 s-1
+
+
+ 		>>>>> Canonical rate contant <<<<<
+
+ Of course, the code calculates the canonical rates as well.
+ However, since only microcanonical rates are available from experiment,
+ there is little need in canonical rate constants in this example.
+
+ Input data below this line.
+
+&keys zn =.true. zpe = 2 printmore = .true. extern = .true. &end
+
+&inputdata
+!315.34 of freR removed as incorrect.
+chir = 2 !chirality of the crosing point
+freX = 243.71, 311.32, 489.87, 794.61, 918.82
+freR = 173.63, 246.56, 488.85, 848.39, 925.59
+inertX = 488.92246, 569.39603, 1048.54998
+inertR = 506.04177, 555.10828, 1052.70339
+enX = -1355.02117860      !energy of MECP in hartree 
+enR = -1355.03569230      !energy of reactant in hartree
+maxn = 1000 ! all calculations are in tunneling regime
+&end
+
+&external
+extR = 0.26, 298.32, 302.92, 562.52, 600.97, 794.45, 914.76 ! Double well levels.
+&end
+
+&probability
+redmass = 14.63023 !from MECP
+soc = 189.00d0 
+grad = 0.085073342
+gradmean = 0.077815043
+&end
+
+&polynomials
+hs4 = 0.025062140129788  
+hs3 = -0.025452152294881 
+hs2 = 0.028364696928330
+hs1 = -0.001513541397475
+hs0 = 0.000016287823656 
+ls4 = -4.847727773839255
+ls3 = 14.218237428331133
+ls2 = -15.528009428624683
+ls1 = 7.619899307501045
+ls0 = -1.438376828523410
+limitL = 0
+limitR = 0.9
+upper = .true. 
+&end

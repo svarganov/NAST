@@ -1,0 +1,81 @@
+#!/bin/bash
+
+name=$1
+out_dir=$2
+ierr=0
+tmp=0
+
+function compare_two() {
+
+tol=0.01
+diff=$(echo $1 $2 | awk "BEGIN { if($1>$2) print $1-$2 ; else print $2-$1 }")
+res=$(echo $diff $tol | awk '{ if($1>$2) print 1 ; else print 0 }')
+return $res
+
+}
+
+
+case $1 in
+
+ exam01.com )
+ 
+ RM_ex01=1.318
+ ZPE_ex01=19.230
+
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+
+ compare_two $RM_ex01 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex01 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam02.com )
+
+ RM_ex02=2.591
+ ZPE_ex02=31.112
+
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+ 
+ compare_two $RM_ex02 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex02 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam03.com )
+ 
+ RM_ex03=5.068
+ ZPE_ex03=149.588
+ 
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+
+ compare_two $RM_ex03 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex03 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam04.com )
+    
+ RM_ex04=1.032
+ ZPE_ex04=13.457
+
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+
+ compare_two $RM_ex04 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex04 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+    
+    ;;
+
+ * )
+    echo "Unrecognized file"
+
+ ierr=1
+
+    ;;
+
+esac
+
+exit $ierr

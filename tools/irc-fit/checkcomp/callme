@@ -1,0 +1,49 @@
+#!/bin/bash
+
+name=$1
+out_dir=$2
+ierr=0
+tmp=0
+
+function compare_two() {
+
+tol=0.001
+diff=$(echo $1 $2 | awk "BEGIN { if($1>$2) print $1-$2 ; else print $2-$1 }")
+res=$(echo $diff $tol | awk '{ if($1>$2) print 1 ; else print 0 }')
+
+return $res
+
+}
+
+
+case $1 in
+
+ exam01.inp )
+ 
+ a1_exam01=0.09146
+ b1_exam01=0.12693
+
+ a1=$(grep " a1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ b1=$(grep " b1 = " $out_dir/${1%.inp}.out | awk '{ print $3 }')
+
+ compare_two $a1_exam01 $a1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $b1_exam01 $b1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam02.inp )
+
+ a1_exam02=0.00187
+ b1_exam02=0.01843
+
+ a1=$(grep " a1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ b1=$(grep " b1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ 
+ compare_two $a1_exam02 $a1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $b1_exam02 $b1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+esac
+
+exit $ierr

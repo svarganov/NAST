@@ -1,0 +1,8 @@
+&programs
+GAMESS = .true.
+&end
+
+&gamess_input_files
+g_irc_output_reac = 'exam01_irc_t.log'
+g_irc_output_prod = 'exam01_irc_s.log'
+&end

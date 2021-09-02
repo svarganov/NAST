@@ -1,0 +1,66 @@
+
+ ******* Example 03 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+ This example tests calculation of microcanonical ISC rate constant.
+
+ Based on Harvey, J.N.; and Aschi, M. Phys. Chem. Chem. Phys., 1999, 1, 5555-5563.
+ Spin-forbidden dehydrogenation of triplet methoxy cation.
+ Dehydrogenation was shown to proceede through two different channels,
+ namely 'direct MECP1' and 'indirect MECP2'. The corresponding microcanonical
+ rate constants for both channels are shown in Fig.3 of the original paper and can be used for comparison.
+
+ Note: in this example, only the 'MECP2' channel is considered.
+
+ Our calculations employd the CCSD(T)/cc-pVTZ level of theory as implemented in Molpro.
+ The MECP search was performed using the Harvey's external script as interfaced to Molpro.
+ The MECP electronic barrier was caluclated to be 11.8 kcal/mol.
+ However, in rate calculations, we used the 14.3 kcal/mol MECP value of the original paper for direct comparison.
+ Besides, our GAMESS SA-MCQDPT2 SOC value of 64.4 cm-1 is different from that of 
+ 45.7 cm-1 of original paper derived from FOCI wavefunction and one-electron SOC operator.
+ We used the 45.7 cm-1 value for direct comparison.
+
+ The rest of parameters are taken from our CCSD(T)/cc-pVTZ calculations.
+
+ For more information, see Manual, Chapter #5, example #3.
+
+     >>>>> Results at T = 295 K for the 'MECP2' channel >>>>>
+
+     >>>>> Canonical rate constant >>>>>
+
+ LZ formula:    1.06 x 10^1 s-1
+ WC formula:    5.21 x 10^6 s-1
+
+ >>>> Double passage velocity-averaged transition probabilities >>>>
+
+ LZ Maxwell-Boltzmann:   0.03 
+ LZ Kuki:                0.007
+
+ INPUT DATA BELOW THIS LINE
+
+$keys
+zpe = 1 printmore = .true. &end 
+
+&inputdata
+freX = 670.56, 1063.90, 1093.35, 1301.17, 1429.34, 2071.39, 2855.30, 2966.86
+freR = 848.04, 853.84, 1121.78, 1122.13, 1229.91, 1238.5, 2676.06, 2683.03, 2685.26 
+inertX = 12.08498, 56.73115, 57.9621
+inertR = 12.15054, 59.52699, 59.53090
+!enX = 0.01893676  !energy of MECP in hartree (in kcal/mol it's 11.8), our result
+enX = 0.022788 !MECP energy in hartree (14.3 in kcal/mol), from Harvey
+enR = 0                      !energy of reactant in hartree
+maxn = 20000
+T1 = 290.0
+T2 = 300.0
+&end
+
+&probability
+redmass = 1.3188641
+soc = 45.7
+grad = 0.1657563917
+gradmean = 0.08190326591
+&end
+

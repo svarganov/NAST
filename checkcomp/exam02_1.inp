@@ -1,0 +1,48 @@
+
+ ******* Example 02_1 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+ Cis-trans isomerization in but-2-ene.
+ To check trans-cis isomerization in but-2-ene, see example #02_2
+
+ This example tests calculation of canonical TST rate constant (P = 1.0 above TS, zero otherwise).
+ This example specifically aims to compare the performance of NAST to MESMER, which stands for Master Equation Solver for Multi-Energy Well Reactions,
+ version 6.0 [Glowacki, D. R.; Liang, C-H.; Morley, C.; Pilling, M. J.; Robertson, S. H. J. Phys. Chem. A 2012, 116, 38, 9545–9560].
+ The input data, such as energies, vibrational frequencies, rotational constants (transformed to the moments of inertia for NAST) and other - were taken
+ from the MESMER input file (cis_to_trans_But-2-ene.xml). Please note that in MESMER the relative energies are given with the ZPEs already included,
+ while in NAST the ZPEs are calculated automatically from the corresponding vibrational frequencies.
+ Check NAST Manual, Chapter 5, example #2 for details.
+
+  >>>>> Canonical TST rate constants at various temperatures (given maxn = 40000) <<<<<
+
+   MESMER: k(cis-to-trans) = 1.83 s-1 at T = 1000 K
+   NAST:   k(cis-to-trans) = 0.65 s-1 at T = 1000 K
+
+   MESMER: k(cis-to-trans) = 2.84 x 10^3 s-1 at T = 1300 K
+   NAST:   k(cis-to-trans) = 1.17 x 10^3 s-1 at T = 1300 K
+
+   MESMER: k(cis-to-trans) = 1.90 x 10^5 s-1 at T = 1600 K
+   NAST:   k(cis-to-trans) = 1.32 x 10^5 s-1 at T = 1600 K
+
+ Input data below this line
+
+&keys zpe = 1 tst = .true. printmore = .t. &end 
+
+&inputdata
+freX = 131, 131, 304, 304, 304, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1340, 1340, 1340, 1452, 1452, 1452, 1452, 1452, 1672, 2976, 2976, 2976, 2976, 2976, 2976, 2976, 2976 
+freR = 258, 290, 290, 396, 575, 673, 873, 950, 970, 1009, 1037, 1050, 1134, 1261, 1380, 1387, 1408, 1464, 1464, 1464, 1464, 1670, 2878, 2935, 2950, 2988, 2988, 2988, 3036, 3050 
+inertX = 109.86829, 396.10409, 396.10409
+inertR = 109.86829, 354.16366, 442.70456
+enX = 0.102777d0  !energy of TS in hartree (in cm-1 it's 21884), without ZPE
+! ZPE correction is calculated from freX and freR and added automatically
+enR = 0                      !energy of reactant in hartree
+!maxn = 40000 ! Right integration limit.
+maxn = 23000 ! Not enough for convergence in rates. Only for test purposes.
+T1 = 100
+Tstep = 100
+T2 = 2000
+&end
+

@@ -1,0 +1,37 @@
+
+ ******* Example 01_1 ******* 
+
+ April 28, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+ This example tests calculation of canonical TST rate constant (P = 1.0 above TS, zero otherwise).
+
+ Based on Dubnikova, F.; Lifshitz, A. J. Phys. Chem. A 2000, 104, 19, 4489–4496.
+ Isomerization of propylene oxide to acetone at T = 1000 K.
+ To see isomerization rate constant from propylene oxide to propanal, see example #01_2
+ Check NAST Manual, Chapter 5, example #1 for details.
+
+  >>>>> Canonical TST rate constant at T = 1000 K <<<<<
+
+   Dubnikova: k = 50.2 s-1 at barrier of 54.2 kcal mol-1
+   Dubnikova: k = 83.1 s-1 at barrier of 53.2 kcal mol-1
+   NAST code: k = 67.8 s-1 at barrier of 53.2 kcal mol-1 and maxn = 30000
+
+ Input data below this line
+
+&keys zpe = 1 tst = .true. &end 
+
+&inputdata
+freX = 262.48, 293.97, 373.99, 579.89, 728.66, 870.98, 885.58, 957.92, 999.13, 1080.92, 1117.86, 1241.16, 1282.76, 1356.77, 1434.36, 1451.63, 1470.82, 2295.49, 3025.98, 3091.53, 3117.65, 3142.31, 3237.56 
+freR = 240.24, 370.15, 416.02, 773.01, 847.88, 903.24, 973.7, 1026.04, 1116.92, 1135.62, 1152.46, 1172.51, 1276.86, 1380.51, 1423.44, 1451.07, 1471.11, 1514.57, 3024.78, 3058.72, 3075.97, 3097.52, 3117.37, 3152.48 
+inertX = 170.85024, 217.26350, 351.14348
+inertR = 100.30507, 272.51409, 305.51402
+enX = 0.09129754  !energy of TS in hartree (in kcal/mol it's 57.29), without ZPE
+! ZPE correction is calculated from freX and freR and added automatically
+enR = 0           !energy of reactant in hartree
+!maxn = 30000
+maxn = 21000 ! Not enough for convergence in rates. Only for test purposes.
+T1 = 1000
+&end
+
