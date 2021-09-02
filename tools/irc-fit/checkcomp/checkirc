@@ -1,0 +1,73 @@
+#!/bin/bash
+
+test_exam_dir=$(pwd)
+script_to_check_results=$test_exam_dir/callme
+
+echo
+echo -e "\e[1;35m $(date) \e[0m"
+echo
+
+for i in *.inp
+
+  do
+
+     if [ -e ${test_exam_dir}/${i%.inp} ]
+       then
+         echo -e "\e[1;31m An existing ${i%.inp}" \
+              "directory found. Deleting it now. \e[0m"
+	 rm -rf ${test_exam_dir}/${i%.inp}
+     fi
+
+  done
+
+echo
+echo "An empty directory is being created for:"
+echo
+
+for i in *.inp
+
+  do
+
+     echo -e "\e[1;36m  ---- ${i%.inp} ---- \e[0m"
+     mkdir ${test_exam_dir}/${i%.inp}
+
+  done   
+
+echo
+echo "Done creating directories. Running the tests now."
+echo
+
+for i in *.inp
+
+  do
+
+     echo -e "\e[1;32m   ---- Testing $i ---- \e[0m"
+     ../ircfit.x $i > ${i%.inp}.log ; rm ${i%.inp}.log
+     term_ok=$(grep -i "Fly with us again." ${i%.inp}.out | wc -l)
+
+     if [ $term_ok -eq 1 ] 
+      then
+         mv ${i%.inp}.out *.nast ${test_exam_dir}/${i%.inp}
+         $script_to_check_results $i ${test_exam_dir}/${i%.inp}
+         
+         check_result=$(echo $?)
+
+         if [ $check_result -ne 0 ] ; then
+          echo "............................ Failed"
+         else
+          echo "............................ Passed"
+         fi
+
+      else
+        echo
+        echo "The ${i%.inp} test didn't terminate normally."
+        echo "Check $i for errors and come back. Continue with other tests now."
+        echo
+        continue
+     fi
+
+  done
+
+echo
+echo Done with tests
+echo
