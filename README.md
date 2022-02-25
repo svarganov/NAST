@@ -4,6 +4,6 @@ This is the nonadiabatic statistical theory (NAST) package for predicting kineti
 # Citation
 If you use the NAST package, please site the following publications:
 
-1. V.D. Dergachev, M. Rooein, I.D. Dergachev, A.O. Lykhin, R.C. Mauban, S.A. Varganov, NAST: Nonadiabatic Statistical Theory Package for Predicting Kinetics of Spin‐Dependent Processes. Topics in Current Chemistry 2016, 380, 15. https://rdcu.be/cHISz
+1. V.D. Dergachev, M. Rooein, I.D. Dergachev, A.O. Lykhin, R.C. Mauban, S.A. Varganov, NAST: Nonadiabatic Statistical Theory Package for Predicting Kinetics of Spin‐Dependent Processes. Topics in Current Chemistry 2022, 380, 15. https://rdcu.be/cHISz
 
 2. Lykhin, A. O.; Kaliakin, D. S.; DePolo, G. E.; Kuzubov, A. A.; Varganov, S. A. Nonadiabatic Transition State Theory: Application to Intersystem Crossings in the Active Sites of Metal-Sulfur Proteins. Int. J. Quantum Chem. 2016, 116 (10), 750–761. https://doi.org/10.1002/qua.25124.
