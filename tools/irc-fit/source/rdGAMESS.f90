@@ -22,7 +22,7 @@ double precision, allocatable                                :: geom_tmp(:,:,:),
 
 read(file_id,'(A)') line                          ! Check from first line
 
-do while (index(line, 'TOTAL NUMBER OF ATOMS') == 0)
+do while ((index(line, 'TOTAL NUMBER OF ATOMS') == 0) .and. (index(line, 'total number of atoms') == 0))
  read(file_id,'(A)') line
 end do                                            ! Now on the '...TOTAL NUMBER...' line
 
@@ -43,7 +43,7 @@ do
  else if (end_of_file < 0) then
    exit
  else
-   if (index(line, ' ON THE REACTION PATH') .ne. 0) then
+   if ((index(line, ' ON THE REACTION PATH') .ne. 0) .or. (index(line, ' on the reaction path') .ne. 0)) then
      npoint = npoint + 1
      call split (line, array)
      read (array(3),*) num
@@ -61,7 +61,7 @@ do
          read(array(4),*) geom_tmp (npoint,i,2)
          read(array(5),*) geom_tmp (npoint,i,3)
        end do
-       do while (index(line, 'ENERGY IS ') == 0)
+       do while ((index(line, 'ENERGY IS ') == 0) .and. (index(line, 'energy is ') == 0))
          read(file_id,'(A)') line
        end do
         call split (line, array)

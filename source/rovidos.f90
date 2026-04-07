@@ -8,15 +8,16 @@ module convolution_module
 
 contains
 subroutine rovib_dos(vibR,vibX,vibTP,rotR,rotX,rotTP, & 
-                                     dosR,dosX,dosTP)
+                                     dosR,dosX,dosX1,dosTP)
 
 real(wp), dimension(:), intent(in)    :: vibR, vibX, vibTP, rotR, rotX, rotTP 
-real(wp), dimension(:), intent(out)   :: dosR, dosX, dosTP
+real(wp), dimension(:), intent(out)   :: dosR, dosX, dosX1, dosTP
 real(wp)                              :: summ
 integer                               :: i,j,k
 
 dosR     = 0.0d0
 dosX     = 0.0d0
+dosX1    = 0.0d0
 dosTP    = 0.0d0
 
 ! Rovibrational DOS for reactant.
@@ -26,10 +27,10 @@ if (solution) then
 ! No rotational levels in bulk solution.
   dosR = vibR
 else
-  do i=1,maxn
+  do i=1,maxn-binZPE
     summ = 0.0d0
     do j=1,i
-      summ = rotR(j)*vibR(i-j+1) + summ ! Accumulate DOS.
+      summ = rotR(j)*vibR(i-j+1)*Estep + summ ! Accumulate DOS.
     end do
     dosR(i) = summ 
   end do
@@ -43,7 +44,7 @@ else
   do i=1,maxn
     summ = 0.0d0
     do j=1,i
-      summ = rotTP(j)*vibTP(i-j+1) + summ 
+      summ = rotTP(j)*vibTP(i-j+1)*Estep + summ 
     enddo
     dosTP(i) = summ
   enddo
@@ -52,6 +53,7 @@ end if
 ! Rovibrational DOS above MECP.
 
 dosX(1+binX:maxn) = dosTP(1:maxn-binX)
+dosX1(1+binX1:maxn) = dosTP(1:maxn-binX1)
 
 ! Expression above gives the same result
 ! as an explicit convolution below.
@@ -67,7 +69,6 @@ dosX(1+binX:maxn) = dosTP(1:maxn-binX)
 
 end subroutine rovib_dos
 
-!subroutine rev_rovib_dos(vibP,rotP,dosP)
 subroutine rev_rovib_dos(vibP,rotP,dosP,dosP_full,dosX_full,dosX_TP_rev)
  real(wp), dimension(:), intent(in)  :: vibP, rotP
  real(wp), dimension(:), intent(out) :: dosP, dosP_full, dosX_full, dosX_TP_rev 
@@ -78,46 +79,48 @@ subroutine rev_rovib_dos(vibP,rotP,dosP,dosP_full,dosX_full,dosX_TP_rev)
 dosP_full   = zero
 dosX_full   = zero
 dosX_TP_rev = zero
-allocate (rotX_full (maxn+binGAP))
-allocate (vibX_full (maxn+binGAP))
+ allocate (rotX_full (maxn+binGAP))
+ allocate (vibX_full (maxn+binGAP))
  
 write(66,'(A)') '.............product rovibrational.'
 
-do i=1,maxn+binGAP!-binXrev
-! rotX_full(i+binXrev) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
-  rotX_full(i) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
+do i=1,maxn+binGAP
+  rotX_full(i) = 4.0d0*sqrt(2.0d0*dble(i)*Estep/autocm*&
                  inertX(1)*inertX(2)*inertX(3))/autocm
 enddo
 
 do j = 1, size(freX)
   k=0
-  do while (floor(freX(j)*dble(k)*autocm).le.maxn+binGAP)
+  do while (floor(freX(j)*dble(k)*(1/Estep)*autocm).le.maxn+binGAP)
      k = k + 1
-     q = ceiling(freX(j)*dble(k)*autocm)
+     q = ceiling(freX(j)*dble(k)*(1/Estep)*autocm)
      if (q .eq. zero .or. q .gt. maxn+binGAP) cycle
        vibX_full(q) = vibX_full(q) + one
   end do
 end do
 ! Add ZPE level.
-  vibX_full(1) = vibX_full(1) + one
+!  vibX_full(1) = vibX_full(1) + one
 
 ! Add external vibrational levels.
 
-if (extern) then
+if (externX) then
   do i = 1, size(extX)
-    q = ceiling(extX(i))
+    q = ceiling(extX(i)*(1/Estep))
     if (q .eq. zero .or. q .gt. maxn+binGAP) cycle
     vibX_full(q) = vibX_full(q) + 1.0d0
   end do
 end if
- 
+
+vibX_full(1) = vibX_full(1) + one 
+vibX_full = vibX_full/Estep
+
 if (solution) then
   dosP_full = vibP
 else
   do i=1, maxn+binGAP
     conP = 0.0d0
     do j=1,i
-      conP=rotP(j)*vibP(i-j+1)+conP
+      conP=rotP(j)*vibP(i-j+1)*Estep+conP
     end do
     dosP_full(i)=conP ! Calculates rovibrational DOS for product.
   end do
@@ -131,7 +134,7 @@ else
   do i = 1, maxn + binGAP
     summ = 0.0d0
     do j = 1, i
-      summ = rotX_full(j)*vibX_full(i-j+1) + summ 
+      summ = rotX_full(j)*vibX_full(i-j+1)*Estep + summ 
     end do
     dosX_TP_rev(i) = summ
   end do
@@ -141,46 +144,52 @@ end if
 
 dosX_full(1+binXrev:maxn+binGAP) = dosX_TP_rev(1:maxn+binGAP-binXrev)
 
-open (55,file='dos_product.out') 
+if (printmore) then
+  open (55,file='dos_product.out') 
 
-write(55,*) '#Energy (cm-1)   ','Product(rot, vib, rovib) - states/cm-1'
+  write(55,*) 'Energy, cm-1   ','Product(rot, vib, rovib) - states/cm-1'
    
-do i=1, maxn+binGAP
-  write(55,71) i,  rotP(i),  vibP(i),  dosP_full(i)
-end do
+  do i=1, maxn+binGAP
+    write(55,71) i*Estep,  rotP(i),  vibP(i),  dosP_full(i)
+  end do
 
-71 format (I6,F30.15,F30.15,F30.15)   
-   
 close(55)
 
-end subroutine rev_rovib_dos
+end if
 
+71 format (F30.3,F30.15,F30.15,F30.15)
+
+end subroutine rev_rovib_dos
 !---------------------------------------------------------------------------
 subroutine write_dos(vibR,vibX,vibTP,rotR,rotX,rotTP,   dosR,dosX,dosTP)
   
  integer                              :: i
  real(wp), dimension(:), intent(in)   :: vibR, vibX, vibTP, rotR, rotX, rotTP
- real(wp), dimension(:), intent(in)   :: dosR, dosX, dosTP 
-   
-open (11,file='dos_mecp.out') 
+ real(wp), dimension(:), intent(in)   :: dosR, dosX, dosTP
+
+if (tst) then
+ open (11, file='dos_ts.out')
+else   
+ open (11,file='dos_mecp.out') 
+end if
+
 open (12,file='dos_reactant.out') 
 open (13,file='dos_tp.out')
-
-write(11,*) '#Energy (cm-1)   ','MECP(rot, vib, rovib) - states/cm-1'
-write(12,*) '#Energy (cm-1)   ','Reactant(rot, vib, rovib) -  states/cm-1'
-write(13,*) '#Energy (cm-1)   ','MECP TP(rot, vib, rovib) - states/cm-1'
+write(11,'(25x,A,7x,A)') 'Energy, cm-1   ','MECP(rot, vib, rovib) - states/cm-1'
+write(12,'(25x,A,7x,A)') 'Energy, cm-1   ','Reactant(rot, vib, rovib) -  states/cm-1'
+write(13,'(25x,A,7x,A)') 'Energy, cm-1   ','MECP TP(rot, vib, rovib) - states/cm-1'
    
 do i=1, maxn
-  write(11,71) i,  rotX(i),  vibX(i),  dosX(i)
-  write(12,71) i,  rotR(i),  vibR(i),  dosR(i)
-  write(13,71) i, rotTP(i), vibTP(i), dosTP(i)
+  write(11,71) i*Estep,  rotX(i),  vibX(i),  dosX(i)
+  write(12,71) i*Estep,  rotR(i),  vibR(i),  dosR(i)
+  write(13,71) i*Estep, rotTP(i), vibTP(i), dosTP(i)
 end do
 
-71 format (I6,F30.15,F30.15,F30.15)   
-   
 close(11)
 close(12)
 close(13)
+
+71 format (F30.3,F30.15,F30.15,F30.15) 
   
 end subroutine write_dos
 !---------------------------------------------------------------------------

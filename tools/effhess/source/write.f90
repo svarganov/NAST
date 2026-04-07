@@ -3,7 +3,7 @@ implicit none
 contains
 !--------------------------------------
 subroutine write_header()
-use M_strings
+use M_strings ! strings.f90
 !--------------------------------------
 ! The current solution is only for Linux
 ! as it binds Fortran with Linux shell
@@ -17,14 +17,14 @@ character(len=32)                       :: username
 character(len=120), allocatable         :: array(:)
 integer                                 :: date(8)
 
-write(66, 10)
-call system('uname -a > _tmp')
+write(66, 10)                  ! 66 is the input_file.out file
+call system('uname -a > _tmp') ! Performs the 'uname -a' Linux command. Returns information about the system and stors it in the file '_tmp'.
 open(unit=1,file='_tmp')
-read(1,'(A)') line
-close(1)
-call system('rm _tmp')
-call split(line,array)
-call getlog(username)
+read(1,'(A)') line             ! Reads the line, which is the return of the 'uname -a' command. 
+close(1)                       
+call system('rm _tmp')         ! Deletes the '_tmp' file
+call split(line,array)         ! Calls the 'split' subroutine from strings.f90. Splits the line to tokens.
+call getlog(username)          ! Returns the login of a user
 write(66, '(1X,A,15X,A)') 'User: ',username
 write(66, '(1X,A,15X,A,/,1X,A,13X,A,1X,/,1X,A,2X,A)') 'Host: ',array(2),'System: ',trim(array(15)),&
 'Hardware platform: ',array(13)
@@ -41,8 +41,8 @@ write(66, 12)
 write(66, 13)
 
 10 format(/,4X,'*******************************************************', &
-           /4X,'~~~~~~~ Effective Hessian: part of NAST package ~~~~~~~',  &
-           /4X,'                  ~~~~~ v. 2021.1 ~~~~~               ',  &
+           /4X,'~~~~~ Effective Hessian: part of the NAST package ~~~~~',  &
+           /4X,'                  ~~~~~ v. 2.0 ~~~~~               ',  &
            /4X,'*******************************************************',/)
 
 11 format('A')
@@ -56,15 +56,25 @@ write(66, 13)
 
 13 format(/,/,1X,'Authors in alphabetical order:',&
           /,1X,'-------------------------------------------------------------', &
-          /,1X,'Ilya D. Dergachev,             University of Nevada, Reno',&
+          /,1X,'Claudia E. Avalos              New York University, New York',&
+          /,1X,'Ilya D. Dergachev,             New York University, New York',&
           /,1X,'Vsevolod D. Dergachev,         University of Nevada, Reno',&
           /,1X,'Aleksandr O. Lykhin,           University of Nevada, Reno',&
           /,1X,'Robert Mauban,                 University of Nevada, Reno',&
-          /,1X,'Mitra Rooein,                  University of Nevada, Reno',&
+          /,1X,'Yash Patel,                    New York University, New York',&
+          /,1X,'Mitra Rooein,                  Uppsala University, Uppsala',&
           /,1X,'Sergey A. Varganov             University of Nevada, Reno',&
+          /,1X,'Philip S. Weiss                New York University, New York',&
           /1X,'-------------------------------------------------------------',/)
 
 end subroutine write_header
+
+! Summary of the subroutine 'write_header'
+! 1. Writes message # 10 to the output file.
+! 2. Calls for the system information, recieves this informaton as a single line, then splits to tokens.
+! 3. Writes the user name and  system information to the output file.
+! 4. Writes the date and time.
+! 5. Writes messages # 12 and 13 to the output file.
 !-----------------------------------------------------------------------------------------------
 subroutine write_output(input)
 
@@ -127,6 +137,8 @@ zpe = zpe*0.002859144   ! final ZPE in kcal/mol
 
 write(66,'(/,a,1x,f12.3)') 'zpe in kcal mol-1:',zpe
 
+write(66,'(/,a,1x,f12.3)') 'Frequency along reaction coordiante is ', freq_rc
+
 write(66,'(/,a)') 'Effective Hessian terminated normally.'
 !================= FORMATTING OPTIONS ====================!
 
@@ -137,7 +149,7 @@ write(66,'(/,a)') 'Effective Hessian terminated normally.'
          /,'Lambda = ',E13.6)
 16 FORMAT('Gradients dot product = ',ES16.9,' indicates ',A,' intersection')
 17 FORMAT(A8,'    ',F3.0,'  ',ES17.10,'   ',ES17.10,'    ',ES17.10)
-18 FORMAT(2X,F14.9,1X,F14.9,1X,F14.9)
+18 FORMAT(2X,F18.9,1X,F18.9,1X,F18.9)
 19 FORMAT(2X,F7.2,20X,F10.7)
 
 end subroutine write_output

@@ -1,8 +1,8 @@
 module Molpro_read_module
 
 use M_strings
-use get_constants
 use hess_data
+
 implicit none
 
 contains
@@ -18,7 +18,7 @@ character(len=80)                             :: line
                                                   ! line containing geometry={
 read(file_id,'(A)') line                          ! Check from first line
 
-do while (index(line, 'geometry={') == 0)
+do while ((index(line, 'geometry={') == 0) .and. (index(line, 'GEOMETRY={') == 0))
  read(file_id,'(A)') line
 end do                                            ! Now on the geometry={ line
 
@@ -29,6 +29,9 @@ end subroutine Molpro_read_number_of_atoms
 !----------------------------------------
 subroutine Molpro_read_atomic_data(file_id)
 
+use get_atomic_masses
+use get_constants
+
 implicit none
 integer, intent(in)                                             :: file_id
 !-------------------------------------------------
@@ -36,13 +39,14 @@ character(len=80)                                               :: line
 character(len=80), allocatable                                  :: array(:)
 integer                                                         :: i, j
 !-------------------------------------------------
-allocate  (symbol (number_of_atoms) )
-allocate  (charge (number_of_atoms) )
-allocate  (coord (number_of_atoms,3) )
+allocate  (symbol (number_of_atoms)  )
+allocate  (charge (number_of_atoms)  )
+allocate  (coord  (number_of_atoms,3))
+allocate  (mass   (number_of_atoms)  )
 !-------------------------------------------------
                                                   ! Need to shift position to the
                                                   ! line containing ATOMIC COORDINATES
-do while (index(line, 'ATOMIC COORDINATES') == 0)
+do while ((index(line, 'atomic coordinates') == 0) .and. (index(line, 'ATOMIC COORDINATES') == 0))
  read(file_id,'(A)') line
 end do                                            ! Now on the ATOMIC COORDINATES line
 
@@ -60,6 +64,11 @@ do i = 1, number_of_atoms
  read(array(6),*) coord(i,3)
 end do
 
+do i = 1, number_of_atoms
+  mass(i) = ams(int(charge(i)))
+end do
+
+mass = mass*amu2au
 coord = coord/ang2bohr
 
 end subroutine Molpro_read_atomic_data
@@ -82,7 +91,7 @@ allocate  (Hess (3*number_of_atoms,3*number_of_atoms) )
 ! Read gradient
                                                    ! Need to shift position to the
                                                    ! line containing dx
-do while (index(line, 'dx') == 0)
+do while ((index(line, 'dx') == 0) .and. (index(line, 'DX') == 0))
  read(file_id1,'(A)') line
 end do                                             ! Now on the $dx line
                                                    ! Need to shift position to the
@@ -104,7 +113,7 @@ rewind file_id1
 ! Read Hessian
                                                    ! Need to shift position to the
                                                    ! line containing Force Constants
-do while (index(line, 'Force Constants') == 0)
+do while ((index(line, 'Force Constants') == 0) .and. (index(line, 'FORCE CONSTANTS') == 0))
  read(file_id2,'(A)') line
 end do                                             ! Now on the Force Constants line
 
@@ -200,6 +209,8 @@ do i = 1, 3*number_of_atoms
    end if
  end do
 end do
-print*,Hess  
+print*,Hess
+ 
 end subroutine Molpro_read_grad_hess
+!-----------------------------------------------
 end module Molpro_read_module

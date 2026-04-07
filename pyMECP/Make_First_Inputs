@@ -1,0 +1,5 @@
+#! /bin/csh -f
+cat Input_Header_A geom Close_Header > Job0_A.inp
+cat Input_Header_B geom Close_Header > Job0_B.inp
+
+

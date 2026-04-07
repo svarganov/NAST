@@ -213,6 +213,8 @@ Eb = Eb - down_origin
 
 binLower = ceiling(Et*autocm)
 binUpper = ceiling(Eb*autocm)
+print *, binLower
+print *, binUpper
 
 ! Compute aa and bb adiabatic parameters.
 

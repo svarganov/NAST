@@ -19,9 +19,9 @@ character(len=3)                                       :: point_g
 
 read(file_id,'(A)') line                          ! Check from first line
 
-do while (index(line, '$DATA') == 0)
+do while ((index(line, '$DATA') == 0) .and. (index(line, '$data') == 0))
  read(file_id,'(A)') line
-end do                                            ! Now on the $DATA line
+end do                                            ! Now on the $DATA ($data) line
 
                                                   ! Now need to shift position to the line containing $END
 read(file_id,'(A)') line                          ! The line next to $DATA: mol. spec.
@@ -34,7 +34,7 @@ end if
 
 number_of_atoms = 0
 
-do while (index(line, '$END') == 0)
+do while ((index(line, '$END') == 0) .and. (index(line, '$end') == 0))
  read(file_id,'(A)') line
  number_of_atoms = number_of_atoms + 1
 end do
@@ -47,6 +47,9 @@ end subroutine GAMESS_read_number_of_atoms
 !--------------------------------------------------------------------------
 subroutine GAMESS_read_atomic_data(file_id)
 
+use get_constants
+use get_atomic_masses
+
 implicit none
 integer, intent(in)                                             :: file_id
 !-------------------------------------------------------------------------
@@ -57,12 +60,13 @@ integer                                                         :: i
 !-------------------------------------------------------------------------
 allocate  (symbol (number_of_atoms) )
 allocate  (charge (number_of_atoms) )
-allocate  (coord (number_of_atoms,3) )
+allocate  (coord (number_of_atoms,3))
+allocate  (mass  (number_of_atoms)  )
 !-------------------------------------------------------------------------
                                                    ! Need to shift position to the
                                                    ! line containing $DATA
 
-do while (index(line, '$DATA') == 0)
+do while ((index(line, '$DATA') == 0) .and. (index(line, '$data') == 0))
  read(file_id,'(A)') line
 end do                                             ! Now on the $DATA line
 
@@ -86,6 +90,13 @@ do i =1, number_of_atoms
  read(array(5),*) coord(i,3)
 end do
 
+do i = 1, number_of_atoms
+  mass(i) = ams(int(charge(i)))
+end do
+
+coord = coord*ang2bohr
+mass = mass*amu2au
+
 end subroutine GAMESS_read_atomic_data
 !---------------------------------------------------------------------------------
 subroutine GAMESS_read_grad_hess(file_id,grad,Hess)
@@ -104,9 +115,9 @@ allocate  (Hess (3*number_of_atoms,3*number_of_atoms) )
 !----------------------------------------------------------------------------------
 ! Read gradient
                                                    ! Need to shift position to the
-                                                   ! line containing $GRAD
+                                                   ! line containing $GRAD ($grad)
 
-do while (index(line, '$GRAD') == 0)
+do while ((index(line, '$GRAD') == 0) .and. (index(line, '$grad') == 0))
  read(file_id,'(A)') line
 end do                                             ! Now on the $GRAD line
 
@@ -128,7 +139,7 @@ rewind file_id
                                                    ! Need to shift position to the
                                                    ! line containing $HESS
 
-do while (index(line, '$HESS') == 0)
+do while ((index(line, '$HESS') == 0) .and. (index(line, '$hess') == 0))
  read(file_id,'(A)') line
 end do                                             ! Now on the $HESS line
 

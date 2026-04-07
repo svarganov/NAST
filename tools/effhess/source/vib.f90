@@ -33,23 +33,23 @@ end subroutine construct_eff_hess
 !-------------------------------------------
 subroutine calc_center_of_mass()
 
-use get_constants
-use get_atomic_masses
+!use get_constants
+!use get_atomic_masses
 
 implicit none
 integer       :: i, j
 
 allocate  (coord_shifted    (number_of_atoms,3))
 allocate  (coord_shifted_mw (number_of_atoms,3))
-allocate  (mass             (number_of_atoms))
+!allocate  (mass             (number_of_atoms))
 
-coord = coord*ang2bohr                                 ! Convert atomic coordinates to bohr 
+!coord = coord*ang2bohr                                 ! Convert atomic coordinates to bohr 
 
-do i = 1, number_of_atoms
- mass(i) = ams(int(charge(i)))                         ! ams is array of atomic masses. Comes from ams.f90
-end do
+!do i = 1, number_of_atoms
+! mass(i) = ams(int(charge(i)))                         ! ams is array of atomic masses. Comes from ams.f90
+!end do
 
-mass = mass*amu2au                                     ! Convert mass from atomic mass units to atomic units
+!mass = mass*amu2au                                     ! Convert mass from atomic mass units to atomic units
 
 total_mass = 0.0d0
 center_of_mass = 0.0d0
@@ -318,7 +318,7 @@ do i = 1, 3*number_of_atoms
 end do
 
 if (n_imag > 0) then
-
+ 
  write(66,12)
 
 end if
@@ -330,7 +330,7 @@ end if
           /,4X,'       along each imaginary frequency mode will be generated       ',&
           /,4X,'                     in the .imag file .                           ',&
           /,4X,'       You can use those coordinates as a starting guess           ',&
-          /,4X,'                     for the MECP re-search.                       ')
+          /,4X,'                     for the MECP re-search.                       ',/)
 
 freq = sqrt(abs(e))/freq_conv
 end subroutine get_freq
@@ -395,6 +395,8 @@ else
  e_rc_max_indx = 3*number_of_atoms
 end if
 freq_rc = sqrt(abs(e_rc(e_rc_max_indx)))/freq_conv
+
+
 do i = 1, 3*number_of_atoms         ! i is the index of an element in an eigenvector
  rc_eig_v_amu(i) = Eff_Hess_rc(i,e_rc_max_indx)/sqrt(mass(ceiling(real(i)/3))/amu2au) 
 end do

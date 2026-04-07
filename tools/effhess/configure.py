@@ -81,7 +81,7 @@ MKL = -L{2}\n'.format(args.fc,args.fcflags,args.lib_path))
  with open(log_file,'a+') as f:
      f.write("\neff_obj = constants.o ams.o \
 readinput.o strings.o\\\n\
-           rdGAMESS.o rdMolpro.o normal_mode.o vib.o write.o driver.o main.o \
+           rdGAMESS.o rdMolpro.o rdQchem.o rdORCA.o normal_mode.o vib.o write.o driver.o main.o \
 \n\neffhess : $(eff_obj)\n\
 \t$(FC) $(FCFLAGS) -o effhess.x $^ $(MKL) {0}\n".format(args.libs))
  f.close()

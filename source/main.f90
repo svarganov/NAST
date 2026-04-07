@@ -1,7 +1,7 @@
 program nast
   use input_module, only : read_file
   use driver_module
-  use write_nast_data 
+  use write_nast_data
   implicit none
 
   double precision  :: t_1, t_2

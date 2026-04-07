@@ -80,9 +80,9 @@ MKL = -L{2}/\n'.format(args.fc,args.fcflags,args.lib_path))
  f.close()
  with open(log_file,'a+') as f:
      f.write("\nirc_obj = constants.o fit.o strings.o \
-readinput.o write.o rdGAMESS.o driver.o main.o\\\n\
+readinput.o write.o rdGAMESS.o rdORCA.o driver.o main.o\\\n\
 \n\nirc : $(irc_obj)\n\
-\t$(FC) $(FCFLAGS) -o ircfit.x $^ $(MKL) {0}\n".format(args.libs))
+\t$(FC) $(FCFLAGS) -o ircfit.x $^ $(MKL) {0}\n".format(args.libs)) # Added rdORCA.o
  f.close()
  with open(log_file,'a+') as f:
      f.write("\n%.o : %.f90\n\t$(FC) $(FCFLAGS) -c $^\n\

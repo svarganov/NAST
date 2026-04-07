@@ -1,0 +1,58 @@
+
+ ******* Example 02_3 ******* 
+
+ November 1, 2024
+ University of Nevada, Reno
+ Varganov Research Group
+
+ Cis-trans isomerization in but-2-ene with Wigner and Eckart tunneling correction providing quantum mechanical (QM) TST rate constants.
+ Note, that in order to calculate Wigner and Eckart tunneling correction, TST=.t. and TST_tunn=.t. must be present in &keys.
+ In this example, both cis/trans and trans/cis isomerization rate constants are calculated in one run with rev=.t. in &keys.
+ For the more details on cis-trans isomerization in but-2-ene, please see the headers for examples 02_1 & 02_2
+
+ This example aims to compare the QM TST rate constants with Eckart tunneling correction calulated with NAST
+ to the QM rate constants with Eckart tunneling correction calculated with MESMER 6.0 (downloaded February 23, 2021i for Windows)
+ using MESMER's data from "examples" folder. Input data was taken from "cis_to_trans_But-2-ene.xml". 
+ Results are given in mesmer.test after executing the program.
+ Check NAST Manual, Chapter 5, example #02_3 for more details.
+
+ For calcualting Wigner and Eckart rate constants tunneling the absolute value of the transition (imaginry) frequency at 
+ the transition state must be provided with TST_freq in &inputdata. In this example, an aritrary transition frequency of
+ 550 cm-1 was used in both NAST and MESMER solely for the purpose of testing our implementation of tunneling corrections.
+
+  >>>>> Quantum-mechanical TST rate constants with Eckart correction at various temperatures (given maxn = 45000) <<<<<
+
+   MESMER: k(cis-to-trans) = 1.88 s-1 at T = 1000 K                 MESMER: k(trans-to-cis) = 0.55 s-1 at T = 1000 K
+   NAST:   k(cis-to-trans) = 0.67 s-1 at T = 1000 K                 NAST:   k(trans-to-cis) = 0.41 s-1 at T = 1000 K
+
+   MESMER: k(cis-to-trans) = 2.89 x 10^3 s-1 at T = 1300 K          MESMER: k(trans-to-cis) = 9.14 x 10^2 s-1 at T = 1300 K
+   NAST:   k(cis-to-trans) = 1.19 x 10^3 s-1 at T = 1300 K          NAST:   k(trans-to-cis) = 8.16 x 10^2 s-1 at T = 1300 K
+
+   MESMER: k(cis-to-trans) = 1.92 x 10^5 s-1 at T = 1600 K          MESMER: k(trans-to-cis) = 6.35 x 10^4 s-1 at T = 1600 K
+   NAST:   k(cis-to-trans) = 1.33 x 10^5 s-1 at T = 1600 K          NAST:   k(trans-to-cis) = 9.84 x 10^4 s-1 at T = 1600 K
+
+ Input data below this line
+
+&keys zpe = 1 tst = .true. TST_tunn=.t. rev=.t. printmore = .t. &end 
+
+&inputdata
+TST_freq = 550
+freX = 131, 131, 304, 304, 304, 1000, 1000, 1000, 1000, 1000, 1000, 1000, 1340, 1340, 1340, 1452, 1452, 1452, 1452, 1452, 1672, 2976, 2976, 2976, 2976, 2976, 2976, 2976, 2976 
+freR = 258, 290, 290, 396, 575, 673, 873, 950, 970, 1009, 1037, 1050, 1134, 1261, 1380, 1387, 1408, 1464, 1464, 1464, 1464, 1670, 2878, 2935, 2950, 2988, 2988, 2988, 3036, 3050 
+inertX = 109.86829, 396.10409, 396.10409
+inertR = 109.86829, 354.16366, 442.70456
+enX = 0.102777d0  !energy of TS in hartree (in cm-1 it's 21884), without ZPE
+! ZPE correction is calculated from freX and freR and added automatically
+enR = 0                      !energy of reactant in hartree
+!maxn = 45000 ! Right integration limit.
+maxn = 23000 ! Not enough for convergence in rates. Only for test purposes.
+T1 = 100
+Tstep = 100
+T2 = 2000
+&end
+
+&reverse
+freP=210, 210, 240, 290, 501, 750, 866, 964, 973, 1030, 1039, 1065, 1146, 1302, 1309, 1380, 1385, 1449, 1449, 1457, 1457, 1680, 2930, 2950, 2950, 2950, 2950, 2954, 3011, 3050
+inertP=51.45966, 485.54674, 514.59657
+enP = -0.00072d0
+&end

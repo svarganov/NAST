@@ -40,26 +40,29 @@ write(n, 12)
 write(n, 13)
 
 
-10 format(/,4X,'*******************************************************', &
-           /4X,'~~~~~~~~~ Intrinsic Reaction Coordinate fit ~~~~~~~~~~~',  &
-           /4X,'                  ~~~~~ v. 2021.1 ~~~~~               ',  &
-           /4X,'*******************************************************',/)
+10 format(/,4X,'*******************************************************************', &
+           /4X,'~~~ Intrinsic Reaction Coordinate fit: part of the NAST package ~~~',  &
+           /4X,'                          ~~~~~ v. 2.0 ~~~~~               ',  &
+           /4X,'*******************************************************************',/)
 
 11 format('A')
 
-12 format(/,/,1X,'   IRC is experimental code to fit explicit 1-D crossing potentials', &
-          /,1X,'              for the spin-forbidden reaction at hand.', &
+12 format(/,/,1X,' IRC is experimental code to fit explicit 1-D crossing potentials', &
+          /,1X,'   for the spin-forbidden reaction at hand.', &
           /,1X,'   The program is distributed free of charge and there is no implied warranty.', &
           /,1X,'   The code distribution is not allowed without written permission from the authors.')
 
 13 format(/,/,1X,'Authors in alphabetical order:',&
           /,1X,'-------------------------------------------------------------', &
-          /,1X,'Ilya D. Dergachev,             University of Nevada, Reno',&
-          /,1X,'Vsevolod D. Dergachev          University of Nevada, Reno',&
+          /,1X,'Claudia E. Avalos              New York University, New York',&
+          /,1X,'Ilya D. Dergachev,             New York University, New York',&
+          /,1X,'Vsevolod D. Dergachev,         University of Nevada, Reno',&
           /,1X,'Aleksandr O. Lykhin,           University of Nevada, Reno',&
           /,1X,'Robert Mauban,                 University of Nevada, Reno',&
-          /,1X,'Mitra Rooein,                  University of Nevada, Reno',&
+          /,1X,'Yash Patel,                    New York University, New York',&
+          /,1X,'Mitra Rooein,                  Uppsala University, Uppsala',&
           /,1X,'Sergey A. Varganov             University of Nevada, Reno',&
+          /,1X,'Philip S. Weiss                New York University, New York',&
           /1X,'-------------------------------------------------------------',/)
 
 end subroutine write_header
@@ -151,31 +154,31 @@ end do
 13 format(/,/,1X,'MECP-reactant minimum energy path has been fit to a line:', &
           /,/,10X,'f(x) = a1*x + a2, where',/,/,2X, &
           'a1 = ',F10.5,' a2 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.',&
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.',&
           /,3x,'Warning! Fitting reactant to a line might inidcate that there are not enough IRC points.',&
           /,3x,'Use fitting results with caution. Consider re-running IRC with smaller search step.')
 
 14 format(/,/,1X,'MECP-reactant minimum energy path has been fit to a parabola:', &
           /,/,10X,'f(x) = a1*x^2 + a2*x + a3, where',/,/,2X, &
           'a1 = ',F10.5,' a2 = ',F10.5,' a3 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.',&
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.',&
           /,3x,'Warning! Fitting reactant to parabola might indicate there are not enough IRC points.',&
           /,3x,'Use fitting results with caution. Consider re-running IRC with smaller search step.')
 
 15 format(/,/,1X,'MECP-reactant minimum energy path has been fit to a cubic polynomial:', &
           /,/,10X,'f(x) = a1*x^3 + a2*x^2 + a3*x + a4, where',/,/,2X, &
           'a1 = ',F10.5,' a2 = ',F10.5,' a3 = ',F10.5,' a4 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.')
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.')
 
 16 format(/,/,1X,'MECP-reactant minimum energy path has been fit to a quartic polynomial:', &
           /,/,10X,'f(x) = a1*x^4 + a2*x^3 + a3*x^2 + a4*x + a5, where',/,/,2X, &
           'a1 = ',F10.5,' a2 = ',F10.5,' a3 = ',F10.5,' a4 = ',F10.5,' a5 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.')
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.')
 
 17 format(/,/,1X,'MECP-product minimum energy path has been fit to a line:', &
           /,/,10X,'g(x) = b1*x + b2, where',/,/,5X, &
           'b1 = ',F10.5,' b2 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.',&
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.',&
           /,/,3x,'Warning! Fitting to a line means there are only two IRC points on the product minimum energy path',&
           /,3x,'in the region from MECP to point where product energy is equal to energy at reactant minimum.',&
           /,3x,'It might be alright, but please consider re-running IRC with smaller step size.')
@@ -183,7 +186,7 @@ end do
 18 format(/,/,1X,'MECP-product minimum energy path has been fit to a parabola:', &
           /,/,10X,'g(x) = b1*x^2 + b2*x + b3, where',/,/,5X, &
           'b1 = ',F10.5,' b2 = ',F10.5,' b3 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.',&
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.',&
           /,/,3x,'Warning! Fitting to parabola might indicate there are not enough IRC points',&
           /,3x,'in the region from MECP to point where product energy is equal to energy at reactant minimum.',&
           /,3x,'It might be alright, but please consider re-running IRC with smaller step size.')
@@ -191,12 +194,12 @@ end do
 19 format(/,/,1X,'MECP-product minimum energy path has been fit to a cubic polynomial:', &
           /,/,10X,'g(x) = b1*x^3 + b2*x^2 + b3*x + b4, where',/,/,5X, &
           'b1 = ',F10.5,' b2 = ',F10.5,' b3 = ',F10.5,' b4 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.')
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.')
 
 20 format(/,/,1X,'MECP-product minimum energy path has been fit to a quartic polynomial:', &
           /,/,10X,'g(x) = b1*x^4 + b2*x^3 + b3*x^2 + b4*x + b5, where',/,/,5X, &
           'b1 = ',F10.5,' b2 = ',F10.5,' b3 = ',F10.5,' b4 = ',F10.5,' b5 = ',F10.5, &
-          /,/,10X,'The polynomial has been fit in the range of [',F5.3,',',F5.3,'] bohr.')
+          /,/,10X,'The polynomial has been fit in the range of [',F7.3,',',F7.3,'] bohr.')
 
 21 format(/,/,1x,'MECP-reactant irc points, energies and energies fit from f(x)', &
           /,/,6x,'n',9x,'x, Bohr',8x,'E, a.u.',6x, 'E_fit, a.u.',/)
@@ -345,8 +348,8 @@ end if
 12 format(/,"&polynomials",/,"hs4 = ",f10.7,/,"hs3 = ",f10.7,/,&
          "hs2 = ",f10.7,/,"hs1 = ",f10.7,/, "hs0 = ",f10.7,/, &
          "ls4 = ",f10.7,/,"ls3 = ",f10.7,/, "ls2 = ",f10.7,/, &
-         "ls1 = ",f10.7,/,"ls0 = ",f10.7,/,"limitL = ",f5.2,/, &
-         "limitR = ",f5.2,/,"&end")
+         "ls1 = ",f10.7,/,"ls0 = ",f10.7,/,"limitL = ",f7.3,/, &
+         "limitR = ",f7.3,/,"&end")
 
 13 format (/,'=============================== ', &
            /,/,"        limitL & limitR", &
@@ -362,14 +365,14 @@ end if
 
 14 format  (/,'For the peaked intersection, limitR should be chosen as the product minimum,' &
            /,'which is the final point on the MECP -> product path.', &
-           /,'In this example, the product minimum is at',f5.2,'.',/,/,'Fly with us again.')
+           /,'In this example, the product minimum is at',f7.3,'.',/,/,'Fly with us again.')
 
 15 format  (/,'For the sloped intersection, limitR should be chosen so that', &
            /,'E1 = f(limitR) is well above MECP to ensure convergence.', &
            /,/,'For that, our default choice is limitR = 2.0 * x_M,', &
            /,'where x_M is the coordinate of MECP.', &
-           /,/,'In this example, x_M was ',f5.2,', E1(x_M) = ',f10.7,' a.u. (',f11.2,' cm-1 ).', &
-           /,'Then, suggested limitR = ',f5.2,', E1(limitR) = ',f10.7,' a.u. (',f11.2,' cm-1 ).',/,/,'Fly with us again.')
+           /,/,'In this example, x_M was ',f7.3,', E1(x_M) = ',f10.7,' a.u. (',f11.2,' cm-1 ).', &
+           /,'Then, suggested limitR = ',f7.3,', E1(limitR) = ',f10.7,' a.u. (',f11.2,' cm-1 ).',/,/,'Fly with us again.')
 
 end subroutine write_nast_template
 !-----------------------------------

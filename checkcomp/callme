@@ -49,7 +49,7 @@ case $1 in
  
  k_TST_1000K=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $2 }')
  k_TST_2000K=$(grep -m1 " 2000.0 " $out_dir/nast.out | awk '{ print $2 }')
- dosR=$(grep " 1500 " $out_dir/dos_reactant.out | awk '{ print $4}')
+ dosR=$(grep " 1500.000 " $out_dir/dos_reactant.out | awk '{ print $4}')
 
  compare_two $k_TST_1000K_exam02_1 $k_TST_1000K $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
  compare_two $k_TST_2000K_exam02_1 $k_TST_2000K $tol2 ; tmp=$(echo $?) ;  ierr=$((ierr + tmp)) ; tmp=0
@@ -69,64 +69,156 @@ case $1 in
  
  k_TST_1000K=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $2 }')
  k_TST_2000K=$(grep -m1 " 2000.0 " $out_dir/nast.out | awk '{ print $2 }')
- dosMECP=$(grep "22991 " $out_dir/dos_mecp.out | awk '{ print $4}')
+ dosMECP=$(grep "22991.000 " $out_dir/dos_ts.out | awk '{ print $4}')
  compare_two $k_TST_1000K_exam02_2 $k_TST_1000K $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
  compare_two $k_TST_2000K_exam02_2 $k_TST_2000K $tol2 ; tmp=$(echo $?) ;  ierr=$((ierr + tmp)) ; tmp=0
  compare_two $dosMECP_exam02_2 $dosMECP $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
 
     ;;
+
+ exam02_3.inp )
  
- exam03.inp )
+ k_TST_1000K_Eckart_exam02_3_direct=7.45e-02 ; tol1=0.01
+ k_TST_2000K_Eckart_exam02_3_direct=1.28e05 ;  tol2=1e03
+ k_TST_1000K_Wigner_exam02_3_direct=6.65e-02;  tol3=$tol1
+ k_TST_1000K_Eckart_exam02_3_reverse=5.89e-02; tol4=$tol1
+ k_TST_2000K_Eckart_exam02_3_reverse=1.28e05;  tol5=$tol2
+ k_TST_1000K_Wigner_exam02_3_reverse=1.41e-02; tol6=$tol2
+
+ # >>>> For debugging >>>>
+ # >>>> Rovibrational density of reactants at eps = 1500 cm-1 >>>>
+
+ dosR_exam02_3=14128.8782209 ; tol7=6.0
  
- k_LZ_295_exam03=1.06e01           ; tol1=0.2
- k_WC_295_exam03=5.21e06           ; tol2=1e4
- p_LZ_MB_295_exam03=0.25039e-01    ; tol3=0.005
- p_LZ_Kuki_295_exam03=0.6555e-02   ; tol4=0.0005
+ k_TST_1000K_Eckart=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $4 }')
+ k_TST_2000K_Eckart=$(grep -m1 " 2000.0 " $out_dir/nast.out | awk '{ print $4 }')
+ k_TST_1000K_Wigner=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $3 }')
+ k_TST_1000K_Eckart_reverse=$(grep -m3 " 1000.0 " $out_dir/nast.out | tail -n1 | awk '{ print $4}')
+ k_TST_2000K_Eckart_reverse=$(grep -m3 " 2000.0 " $out_dir/nast.out | tail -n1 | awk '{ print $4}')
+ k_TST_1000K_Wigner_reverse=$(grep -m3 " 1000.0 " $out_dir/nast.out | tail -n1 | awk '{ print $3}')
+ dosR=$(grep " 1500.000 " $out_dir/dos_reactant.out | awk '{ print $4}')
+
+ compare_two $k_TST_1000K_Eckart_exam02_3_direct $k_TST_1000K_Eckart $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_TST_2000K_Eckart_exam02_3_direct $k_TST_2000K_Eckart $tol2 ; tmp=$(echo $?) ;  ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_TST_1000K_Wigner_exam02_3_direct $k_TST_1000K_Wigner $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_TST_1000K_Eckart_exam02_3_reverse $k_TST_1000K_Eckart_reverse $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_TST_2000K_Eckart_exam02_3_reverse $k_TST_2000K_Eckart_reverse $tol5 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_TST_1000K_Wigner_exam02_3_reverse $k_TST_1000K_Wigner $tol6 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $dosR_exam02_3 $dosR $tol7 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;;
+ 
+ exam03_1.inp )
+ 
+ k_LZ_295_exam03_1=1.06e01           ; tol1=0.2
+ k_WC_295_exam03_1=5.21e06           ; tol2=1e4
+ p_LZ_MB_295_exam03_1=0.25039e-01    ; tol3=0.005
+ p_LZ_Kuki_295_exam03_1=0.6555e-02   ; tol4=0.0005
 
  # >>>> For debugging >>>>
  # >>>> Rovibrational density of reactants at eps = 912 cm-1 >>>>
 
- dosR_exam03=4.076548e01 ; tol5=2.0
+ dosR_exam03_1=4.076548e01 ; tol5=2.0
 
  k_LZ_295=$(grep -m1 " 295.0 " $out_dir/nast.out | awk '{ print $2 }')
  k_WC_295=$(grep -m1 " 295.0 " $out_dir/nast.out | awk '{ print $3 }')
  p_LZ_MB_295=$(grep -m2 " 295.0 " $out_dir/nast.out | tail -n1 | awk '{ print $2}')
  p_LZ_Kuki_295=$(grep -m2 " 295.0 " $out_dir/nast.out | tail -n1 | awk '{ print $3}') 
- dosR=$(grep " 912 " $out_dir/dos_reactant.out | awk '{ print $4}')
+ dosR=$(grep " 912.000 " $out_dir/dos_reactant.out | awk '{ print $4}')
 
- compare_two $k_LZ_295_exam03 $k_LZ_295 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_WC_295_exam03 $k_WC_295 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $p_LZ_MB_295_exam03 $p_LZ_MB_295 $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $p_LZ_Kuki_295_exam03 $p_LZ_Kuki_295 $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $dosR_exam03 $dosR $tol5 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_LZ_295_exam03_1 $k_LZ_295 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_295_exam03_1 $k_WC_295 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $p_LZ_MB_295_exam03_1 $p_LZ_MB_295 $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $p_LZ_Kuki_295_exam03_1 $p_LZ_Kuki_295 $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $dosR_exam03_1 $dosR $tol5 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
 
     ;;
 
- exam04.inp )
+ exam03_2.inp )
+ 
+ k_LZ_295_exam03_2=1.06e01          ; tol1=0.01
+ k_WC_295_exam03_2=5.20e06          ; tol2=1e4
+
+ k_LZ_295=$(grep -m1 " 295.0 " $out_dir/nast.out | awk '{ print $2 }')
+ k_WC_295=$(grep -m1 " 295.0 " $out_dir/nast.out | awk '{ print $3 }')
+
+ compare_two $k_LZ_295_exam03_2 $k_LZ_295 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_295_exam03_2 $k_WC_295 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam04_1.inp )
     
- k_LZ_296_exam04_direct=1.76e06 ; tol1=1e04
- k_WC_296_exam04_direct=4.96e06  ; tol2=$tol1
- k_LZ_296_exam04_reverse=8.76e01    ; tol3=1.0
- k_WC_296_exam04_reverse=3.50e02    ; tol4=2.0
+ k_LZ_296_exam04_1_direct=1.76e06 ; tol1=1e04
+ k_WC_296_exam04_1_direct=4.96e06  ; tol2=$tol1
+ k_LZ_296_exam04_1_reverse=8.76e01    ; tol3=1.0
+ k_WC_296_exam04_1_reverse=3.50e02    ; tol4=2.0
  
  k_LZ_296_direct=$(grep -m1 " 296.0 " $out_dir/nast.out | awk '{ print $2 }')
  k_WC_296_direct=$(grep -m1 " 296.0 " $out_dir/nast.out | awk '{ print $3 }')
  k_LZ_296_reverse=$(grep -m3 " 296.0 " $out_dir/nast.out | tail -n1 | awk '{ print $2}')
  k_WC_296_reverse=$(grep -m3 " 296.0 " $out_dir/nast.out | tail -n1 | awk '{ print $3}') 
 
- compare_two $k_LZ_296_exam04_direct $k_LZ_296_direct $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_WC_296_exam04_direct $k_WC_296_direct $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_LZ_296_exam04_reverse $k_LZ_296_reverse $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_WC_296_exam04_reverse $k_WC_296_reverse $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_LZ_296_exam04_1_direct $k_LZ_296_direct $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_296_exam04_1_direct $k_WC_296_direct $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_LZ_296_exam04_1_reverse $k_LZ_296_reverse $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_296_exam04_1_reverse $k_WC_296_reverse $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
     
     ;;
 
+ exam04_2.inp )
+    
+ k_LZ_290_exam04_2=6.41e04  ; tol1=1e02
+ k_LZ_300_exam04_2=1.17e05  ; tol2=1e03
+ k_WC_290_exam04_2=1.94e05  ; tol3=$tol2
+ k_WC_300_exam04_2=3.28e05  ; tol4=$tol2
+
+ k_LZ_290=$(grep -m1 " 290.0 " $out_dir/nast.out | awk '{ print $2 }')
+ k_LZ_300=$(grep -m1 " 300.0 " $out_dir/nast.out | awk '{ print $2 }')
+ k_WC_290=$(grep -m1 " 290.0 " $out_dir/nast.out | awk '{ print $3 }')
+ k_WC_300=$(grep -m1 " 300.0 " $out_dir/nast.out | awk '{ print $3 }')
+
+ compare_two $k_LZ_290_exam04_2 $k_LZ_290 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_LZ_300_exam04_2 $k_LZ_300 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_290_exam04_2 $k_WC_290 $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_WC_300_exam04_2 $k_WC_300 $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;;
+
+ exam04_3.inp )
+    
+ k_LZ_300_exam04_3=1.08e05  ; tol1=1e03
+ k1_en_LZ_4000_exam04_3=3.62e10  ; tol2=1e08
+ k2_en_LZ_4000_exam04_3=7.82e08  ; tol3=1e06
+ k3_en_LZ_4000_exam04_3=1.51e10  ; tol4=$tol2
+ k1_LZ_300_exam04_3=8.30e04  ; tol5=1e02
+ k2_LZ_300_exam04_3=1.52e03  ; tol6=1e01
+ k3_LZ_300_exam04_3=2.81e04  ; tol7=$tol5
+
+ k_LZ_300=$(grep -m1 " 300.0 " $out_dir/nast.out | awk '{ print $2 }')
+ k1_en_LZ_4000=$(grep -m1 " 4000.00 " $out_dir/Bz_LZ_energy_rate.out | awk '{ print $2 }')
+ k2_en_LZ_4000=$(grep -m1 " 4000.00 " $out_dir/Bz_LZ_energy_rate.out | awk '{ print $3 }')
+ k3_en_LZ_4000=$(grep -m1 " 4000.00 " $out_dir/Bz_LZ_energy_rate.out | awk '{ print $4 }')
+ k1_LZ_300=$(grep -m1 " 300.0 " $out_dir/Bz_LZ_tempt_rate.out | awk '{ print $2 }')
+ k2_LZ_300=$(grep -m1 " 300.0 " $out_dir/Bz_LZ_tempt_rate.out | awk '{ print $3 }')
+ k3_LZ_300=$(grep -m1 " 300.0 " $out_dir/Bz_LZ_tempt_rate.out | awk '{ print $4 }')
+
+ compare_two $k_LZ_300_exam04_3 $k_LZ_300 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k1_en_LZ_4000_exam04_3 $k1_en_LZ_4000 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k2_en_LZ_4000_exam04_3 $k2_en_LZ_4000 $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k3_en_LZ_4000_exam04_3 $k3_en_LZ_4000 $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k1_LZ_300_exam04_3 $k1_LZ_300 $tol5 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k2_LZ_300_exam04_3 $k2_LZ_300 $tol6 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k3_LZ_300_exam04_3 $k3_LZ_300 $tol7 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;;
+
  exam05.inp )
  
- k_WC_247cm_exam05=1.66e08  ; tol1=2e06
- k_ZN_247cm_exam05=7.14e04  ; tol2=2e02
- k_WC_494cm_exam05=4.31e08  ; tol3=$tol1
- k_ZN_494cm_exam05=6.28e05  ; tol4=2e03
+ k_WC_247cm_exam05=1.47e08  ; tol1=2e06
+ k_ZN_247cm_exam05=6.89e04  ; tol2=2e02
+ k_WC_494cm_exam05=2.97e08  ; tol3=$tol1
+ k_ZN_494cm_exam05=5.40e05  ; tol4=2e03
  
 
  # >>>> For debugging >>>>
@@ -134,11 +226,11 @@ case $1 in
 
  dosR_exam05=29762.7509 ; tol5=5.0
 
- k_WC_247cm=$(grep -m1 " 247 " $out_dir/energy_rates.out | awk '{ print $3 }')
- k_ZN_247cm=$(grep -m1 " 247 " $out_dir/energy_rates.out | awk '{ print $4 }')
- k_WC_494cm=$(grep -m1 " 494 " $out_dir/energy_rates.out | awk '{ print $3 }')
- k_ZN_494cm=$(grep -m1 " 494 " $out_dir/energy_rates.out | awk '{ print $4 }') 
- dosR=$(grep " 1000 " $out_dir/dos_reactant.out | awk '{ print $4}')
+ k_WC_247cm=$(grep -m1 " 247.000 " $out_dir/energy_rates.out | awk '{ print $3 }')
+ k_ZN_247cm=$(grep -m1 " 247.000 " $out_dir/energy_rates.out | awk '{ print $4 }')
+ k_WC_494cm=$(grep -m1 " 494.000 " $out_dir/energy_rates.out | awk '{ print $3 }')
+ k_ZN_494cm=$(grep -m1 " 494.000 " $out_dir/energy_rates.out | awk '{ print $4 }') 
+ dosR=$(grep " 1000.000 " $out_dir/dos_reactant.out | awk '{ print $4}')
 
  compare_two $k_WC_247cm_exam05 $k_WC_247cm $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
  compare_two $k_ZN_247cm_exam05 $k_ZN_247cm $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
@@ -163,7 +255,7 @@ case $1 in
  k_ZN_900=$(grep -m1 " 900.0 " $out_dir/nast.out | awk '{ print $4 }')
  k_WC_1000=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $3}')
  k_ZN_1000=$(grep -m1 " 1000.0 " $out_dir/nast.out | awk '{ print $4}') 
- dosTP=$(grep " 1153 " $out_dir/dos_tp.out | awk '{ print $4}')
+ dosTP=$(grep " 1153.000 " $out_dir/dos_tp.out | awk '{ print $4}')
 
  compare_two $k_WC_900_exam06 $k_WC_900 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
  compare_two $k_ZN_900_exam06 $k_ZN_900 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
@@ -175,25 +267,26 @@ case $1 in
 
  exam07.inp )
 
- LZS_220_1_ex07=2.2551e-02 ; tol1=0.001
- LZS_220_2_ex07=0.1849     ; tol2=$tol1
- k_221_1_ex07=1.51e07      ; tol3=1e05
- k_221_2_ex07=1.28e08      ; tol4=1e06
+ LZS_220_1_exam07=2.2551e-02 ; tol1=0.001
+ LZS_220_2_exam07=0.1849     ; tol2=$tol1
+ k_221_1_exam07=1.51e07      ; tol3=1e05
+ k_221_2_exam07=1.28e08      ; tol4=1e06
 
- LZS_220_1=$(grep -m1 " 220 " $out_dir/split_probabilities.out | awk '{ print $2 }')
- LZS_220_2=$(grep -m1 " 220 " $out_dir/split_probabilities.out | awk '{ print $3 }')
- k_221_1=$(grep -m1 " 221 " $out_dir/split_energy_rate.out | awk '{ print $2 }')
- k_221_2=$(grep -m1 " 221 " $out_dir/split_energy_rate.out | awk '{ print $3 }')
+ LZS_220_1=$(grep -m1 " 220.000 " $out_dir/split_LZ_probabilities.out | awk '{ print $2 }')
+ LZS_220_2=$(grep -m1 " 220.000 " $out_dir/split_LZ_probabilities.out | awk '{ print $3 }')
+ k_221_1=$(grep -m1 " 221.000 " $out_dir/split_LZ_energy_rate.out | awk '{ print $2 }')
+ k_221_2=$(grep -m1 " 221.000 " $out_dir/split_LZ_energy_rate.out | awk '{ print $3 }')
 
- compare_two $LZS_220_1_ex07 $LZS_220_1 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $LZS_220_2_ex07 $LZS_220_2 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_221_1_ex07   $k_221_1   $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
- compare_two $k_221_2_ex07   $k_221_2   $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $LZS_220_1_exam07 $LZS_220_1 $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $LZS_220_2_exam07 $LZS_220_2 $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_221_1_exam07   $k_221_1   $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $k_221_2_exam07   $k_221_2   $tol4 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
    
-   ;;
+   ;; 
 
  * )
-    echo "Unrecognized file"
+ 
+   echo "Unrecognized file"
 
  ierr=1
 

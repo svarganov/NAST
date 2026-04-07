@@ -1,0 +1,62 @@
+#!/bin/bash
+
+name=$1
+out_dir=$2
+ierr=0
+tmp=0
+
+function compare_two() {
+
+diff=$(echo $1 $2 | awk '{ if($1>$2) print $1-$2 ; else print $2-$1 }')
+res=$(echo $diff $3 | awk '{ if($1>$2) print 1 ; else print 0 }')
+
+return $res
+
+}
+
+
+case $1 in
+
+ exam01.com )
+ 
+ Freq_exam01=761.08    ; tol1=0.5
+ HRF_exam01=3.930E-01 ; tol2=0.0001
+ RE_exam01=1.363E-03 ; tol3=0.00001
+
+ Freq=$(grep -m1 " 35 " $out_dir/exam01.out | awk '{ printf "%12.10e\n", $2 }')
+ HRF=$(grep -m1 " 35 " $out_dir/exam01.out | awk '{ printf "%12.10e\n", $3 }')
+ RE=$(grep -m1 " 35 " $out_dir/exam01.out | awk '{ printf "%12.10e\n", $4 }')
+
+ compare_two $Freq_exam01 $Freq $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $HRF_exam01 $HRF $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $RE_exam01 $RE $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;;
+
+ exam02.com )
+ 
+ Freq_exam02=3207.21    ; tol1=0.5
+ HRF_exam02=6.44834E-05 ; tol2=0.00001
+ RE_exam02=9.42306E-07 ; tol3=0.000001
+
+ Freq=$(grep -m1 " 210 " $out_dir/exam02.out | awk '{ printf "%12.10e\n", $2 }')
+ HRF=$(grep -m1 " 210 " $out_dir/exam02.out | awk '{ printf "%12.10e\n", $3 }')
+ RE=$(grep -m1 " 210 " $out_dir/exam02.out | awk '{ printf "%12.10e\n", $4 }')
+
+ compare_two $Freq_exam02 $Freq $tol1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $HRF_exam02 $HRF $tol2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $RE_exam02 $RE $tol3 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;; 
+
+ * )
+ 
+   echo "Unrecognized file"
+
+ ierr=1
+
+    ;;
+
+esac
+
+exit $ierr

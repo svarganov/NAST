@@ -1,11 +1,11 @@
 module zn_adiabatic_module
-   use precision_module, only : wp
-   use error_module
-   use input_module
-   use pes_module,   only : poly_high, poly_low 
-   use root_module,  only : root 
-   use diag_module 
-   use zn_param_module 
+   use precision_module, only : wp                 ! precision.f90
+   use error_module                                ! error.f90 
+   use input_module                                ! readinput.f90 
+   use pes_module,   only : poly_high, poly_low    ! pes.f90 
+   use root_module,  only : root                   ! root.f90
+   use diag_module                                 ! zn_diag.f90 
+   use zn_param_module                             ! zn_param.f90 
 
    implicit none
    public

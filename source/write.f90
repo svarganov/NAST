@@ -15,7 +15,6 @@ implicit none
 character(len=120)                      :: line
 character(len=32)                       :: username
 character(len=120), allocatable         :: array(:)
-! character(len=120)                      :: array(40)
 integer                                 :: date(8)
 
 write(66, 10)
@@ -39,11 +38,11 @@ date(6), ':', date(7)
 
 write(66, 12)
 write(66, 13)
-
+write(66, 14)
 
 10 format(/,4X,'*******************************************************', &
            /4X,'~~~~~~~ NAST: Nonadiabatic Statistical Theory ~~~~~~~~',  &
-           /4X,'                  ~~~~~ v. 2021.1 ~~~~~               ',  &
+           /4X,'                  ~~~~~ v. 2.0 ~~~~~               ',  &
            /4X,'*******************************************************',/)
 
 11 format('A')
@@ -56,12 +55,15 @@ write(66, 13)
 
 13 format(/,/,1X,'Authors in alphabetical order:',&
           /,1X,'-------------------------------------------------------------', &
-          /,1X,'Ilya D. Dergachev,             University of Nevada, Reno',&
+          /,1X,'Claudia E. Avalos,             New York University, New York',&
+          /,1X,'Ilya D. Dergachev,             New York University, New York',&
           /,1X,'Vsevolod D. Dergachev,         University of Nevada, Reno',&
-          /,1X,'Aleksandr O. Lykhin,           University of Nevada, Reno',&
-          /,1X,'Robert Mauban,                 University of Nevada, Reno',&
+          /,1X,'Aleksandr O. Lykhin,           University of Nevada, Reno')
+14 format(  1X,'Robert Mauban,                 University of Nevada, Reno',&
+          /,1X,'Yash Patel,                    New York University, New York',&
           /,1X,'Mitra Rooein,                  University of Nevada, Reno',&
-          /,1X,'Sergey A. Varganov             University of Nevada, Reno',&
+          /,1X,'Sergey A. Varganov,            University of Nevada, Reno',&
+          /,1X,'Philip S. Weiss                New York University, New York',&
           /1X,'-------------------------------------------------------------',/)
 
 end subroutine write_header
@@ -75,7 +77,10 @@ write(66,'(2X,A)') '---------------------------------------------------------'
 write(66,'(8X,A)') 'NAST control parameters and related data'
 write(66, '(/,5X,A,I1,5X,A,L,5X,A,L,5X,A,L)') 'zpe = ',zpe,'sp = ',sp,'zn = ',zn, &
                                                      'solution = ',solution
-write(66, '(5X,A,L,5X,A,L,5X,A,L,5X,A,L)') 'tst = ',tst,'printmore = ',printmore,'rev = ',rev,'extern = ',extern
+write(66, '(5X,A,L,5X,A,L,5X,A,L,5X,A,L)') 'tst = ',tst, 'TST_tunn = ',TST_tunn, &
+        'printmore = ',printmore,'rev = ',rev
+write(66, '(5X,A,L,5X,A,L,5X,A,L)') 'externR = ',externR, 'externX = ',externX, &
+        'externP = ',externP
 write(66,'(2X,A)') '---------------------------------------------------------'
 
  if (tst) then
@@ -94,13 +99,14 @@ else
    write(66,'(1x,a)') 'zpe = 0: ZPE correction is skipped.'
 end if
 
-write(66,'(1x,a,i5,a)') 'Electronic barrier from reactant to MECP is ',int(mecp*autocm),' cm-1'
+write(66,'(1x,a,i5,a)') 'Electronic barrier from reactant to MECP = ',int(mecp*autocm),' cm-1'
 write(66,'(1x,a,i6,a,/,1x,a,i6,a,/,1x,a,i6,a)') 'ZPE of reactants = ',int(zpeR*autocm), ' cm-1', &
 'ZPE of MECP = ',int(zpeX*autocm),' cm-1','ZPE-corrected MECP energy bin = ',binX,' cm-1'
 
 if (rev) then
-  write(66,'(1x,a,i6,a)') 'ZPE of product is ',int(zpeP*autocm), ' cm-1.'
-  write(66,'(1x,a,i6,a)') 'Gap between reactant and product is  ',binGAP,' cm-1.'
+  write(66,'(1x,a,i6,a)') 'ZPE of product = ',int(zpeP*autocm), ' cm-1.'
+  write(66,'(1x,a,i6,a)') 'Gap between reactant and product = ',binGAP,' cm-1.'
+  write(66,'(1x,a,i6,a)') 'ZPE-corrected reverse MECP energy bin = ',binXrev,' cm-1'
 end if
 
 end subroutine write_options

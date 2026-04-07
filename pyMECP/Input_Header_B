@@ -1,0 +1,7 @@
+ ! UKS B3LYP def2-SVP verytightscf EnGrad moread
+ %moinp "start_B.gbw"
+ %output
+   Print[P_basis]2
+   Print[P_MOs]1
+ end
+* xyz 0 5

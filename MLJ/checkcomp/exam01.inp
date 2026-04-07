@@ -1,0 +1,49 @@
+
+ ******* Example 01 ******* 
+
+ January 30, 2026
+ New York University, New York
+ Avalos Research Group
+          &
+ University of Nevada, Reno
+ Varganov Research Group
+
+ This example tests calculation of Marcus-Levich-Jortner rate constant with FGR program.
+
+ Based on Tani, Y.; Miyata, K.; Ou, E.; Oshima, Y.; Komura, M.; Terasaki, M.; Kimura, S.; 
+ Ehara, T.; Kubo, K.; Onda, K.; Ogawa, T. Fast, efficient, narrowband room-temperature phosphorescence 
+ from metal-free 1,2-diketones: rational design and the mechanism. Chem. Sci. 2024, 15, 10784–10793.
+ Fast S1 to T3 photoinduced ISC in 1,2-bis[3-bromothiophen-2-yl]ethane-1,2-dione (1a) in cyclohexane.
+
+ The geometries and Hessians of the S1 and T3 excited states were calculated with TD-DFT using the Tamn-Dancoff approximation 
+ at the B3LYP-D3/6-311G(d) level of theory. Spin-orbit coupling constant was calculated at the CAMB3LYP-D3BJ/6-311G(d) 
+ level of theory. All calculations were done with the ORCA 6.0.1 electronic structure package.  
+
+ For more information, see Manual, Chapter #6, example #7.
+
+	>>>>>  Experimental results at 298 K <<<<<
+
+      S1 to T3 ISC estimated time constant: t < 10 ps.
+
+       >>>>> FGR results at T = 300 K <<<<<
+
+       >>>>>  Canonical MLJ rate constant  <<<<<
+
+          MLJ formula: k = 5.41 x 10^12 s-1.
+
+ Input data below this line
+
+&inputdata
+enR = -6477.99109422466d0 
+enP = -6477.99612690070d0
+V = 131
+freR =    21.2   39.7   58.2   70.6   93.5  128.8  142.9  179.8  182.6  216.5  220.9  305.4  306.3  353.9  376.8  390.7  408.0  436.5  442.7  521.0  582.8  607.0  612.2  613.4  656.3  681.7  715.4  723.6  761.1  789.4  837.4  876.6  877.1  881.9  893.2  987.0 1108.6 1110.2 1164.9 1171.5 1217.1 1221.7 1327.9 1369.2 1393.8 1408.3 1455.3 1508.2 1515.1 1543.3 3220.8 3221.2 3241.2 3243.1
+S =  1.655E-03 4.847E-04 5.367E-01 2.377E-03 1.861E+00 2.662E-04 3.926E-05 6.806E-03 3.163E-01 5.970E-05 4.091E-04 1.497E-01 2.824E-02 6.148E-02 3.855E-03 5.304E-03 5.585E-05 1.906E-01 9.585E-05 8.674E-05 1.115E-05 3.222E-03 1.125E-02 4.554E-07 3.853E-02 9.934E-10 1.503E-06 3.311E-05 3.930E-01 3.165E-01 2.612E-04 3.220E-07 9.332E-07 3.180E-05 2.014E-02 1.401E-01 1.950E-03 7.996E-02 9.590E-02 1.076E-01 1.240E-02 8.600E-02 1.171E-01 5.361E-02 1.593E-03 3.035E-02 2.156E-02 8.164E-02 6.775E-02 2.903E-03 3.451E-06 5.723E-05 3.801E-07 2.084E-05
+lambda_vib =  1.600E-07 8.758E-08 1.423E-04 7.646E-07 7.928E-04 1.563E-07 2.557E-08 5.575E-06 2.631E-04 5.888E-08 4.118E-07 2.083E-04 3.941E-05 9.912E-05 6.619E-06 9.443E-06 1.038E-07 3.790E-04 1.933E-07 2.059E-07 2.962E-08 8.912E-06 3.138E-05 1.273E-09 1.152E-04 3.086E-12 4.899E-09 1.092E-07 1.363E-03 1.138E-03 9.967E-07 1.286E-09 3.729E-09 1.278E-07 8.197E-05 6.299E-04 9.852E-06 4.045E-04 5.090E-04 5.741E-04 6.876E-05 4.787E-04 7.086E-04 3.345E-04 1.012E-05 1.947E-04 1.430E-04 5.610E-04 4.677E-04 2.042E-05 5.065E-08 8.399E-07 5.613E-09 3.080E-07
+lambda_ext = 0.0d0
+n_vib = -1
+T1 = 250
+Tstep = 10
+T2 = 300
+trsh = 4.796
+&end

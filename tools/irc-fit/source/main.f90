@@ -5,6 +5,7 @@ use M_strings
 use write_irc_data
 use irc_data
 use GAMESS_read_module
+use ORCA_read_module ! Added
 
 implicit none
 !---------------------------------------------------------------------------------------------------------

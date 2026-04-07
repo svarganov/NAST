@@ -1,0 +1,8 @@
+&programs
+ORCA = .true.
+&end
+
+&orca_input_files
+g_irc_output_reac_orca = 'exam03_irc_t.xyz'
+g_irc_output_prod_orca = 'exam03_irc_s.xyz'
+&end

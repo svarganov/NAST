@@ -26,7 +26,7 @@ write(66,'(A)') '.......rotational.'
 ! Rotational DOS for reactant.
 
 do i=1,maxn
-  rotR(i) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
+  rotR(i) = 4.0d0*sqrt(2.0d0*dble(i)*Estep/autocm*&
             inertR(1)*inertR(2)*inertR(3))/autocm
 enddo
 
@@ -38,14 +38,14 @@ enddo
 ! the total number of k is equal to maxn-1.
 
 do i=1,maxn-1
-  rotTP(i) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
+  rotTP(i) = 4.0d0*sqrt(2.0d0*dble(i)*Estep/autocm*&
              inertX(1)*inertX(2)*inertX(3))/autocm
 enddo
 
 ! Rotational DOS at the MECP; max[i]+binX=maxn due to conservation of energy.
 
 do i=1,maxn-binX
-  rotX(i+binX) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
+  rotX(i+binX) = 4.0d0*sqrt(2.0d0*dble(i)*Estep/autocm*&
                  inertX(1)*inertX(2)*inertX(3))/autocm
 enddo
  
@@ -60,7 +60,7 @@ subroutine rev_asym_top(rotP)
 
  write(66,'(A)') '...........product rotational.'
  do i=1, maxn+binGAP
-   rotP(i) = 4.0d0*sqrt(2.0d0*dble(i)/autocm*&
+   rotP(i) = 4.0d0*sqrt(2.0d0*dble(i)*Estep/autocm*&
              inertP(1)*inertP(2)*inertP(3))/autocm
  enddo
 

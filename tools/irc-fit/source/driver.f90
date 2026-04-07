@@ -5,6 +5,7 @@ use get_constants
 use irc_data
 use write_irc_data
 use GAMESS_read_module
+use ORCA_read_module ! Added
 
 implicit none
 contains
@@ -29,6 +30,11 @@ case(2)
  
  open(unit = 11, status = "old", action = "read", file = m_irc_output)
 
+case (3)                                                                         ! Added
+
+ open(unit = 11, status = "old", action = "read", file = g_irc_output_reac_orca) ! Added
+ open(unit = 12, status = "old", action = "read", file = g_irc_output_prod_orca) ! Added
+
 end select 
 
 select case(m)
@@ -41,6 +47,11 @@ call GAMESS_read_atomic_data(12,n2,numbr,geom_prod,en_prod)
 case(2)
 
 !call Molpro_read_atomic_data(11)
+
+case(3)                                                   ! Added
+
+call ORCA_read_atomic_data(11,n1,numbr,geom_reac,en_reac) ! Added
+call ORCA_read_atomic_data(12,n2,numbr,geom_prod,en_prod) ! Added
 
 end select
 

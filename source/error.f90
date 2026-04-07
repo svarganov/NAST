@@ -62,7 +62,21 @@ subroutine error_message(e)
 
   elseif (e .eq. 17) then
    write (*,*) "The T_final value in the input file is set negative"
+  
+  elseif (e .eq. 18) then
+   write (*,*) "Calculations of tunneling corrections for TST are enabled, but 'TST_freq' is missing." 
+   write (*,*) "Please, provide 'TST_freq'."
 
+  elseif (e .eq. 19) then
+   write (*,*) "TST_tunn requires rev=.true. Please, set rev to .true."
+
+  elseif (e .eq. 20) then
+   write (*,*) "enR < enP. If rev=.true., the forward reaction must be relaxation, i.e. enR > enP."
+   write (*,*) "Switch the data in the $inputdata and $rev groups."
+
+  elseif (e .eq. 21) then
+   write (*,*) "ZPE-corrected MECP energy < 0. Abort. Try calculation with ZPE = 0."
+  
   endif
 
   STOP

@@ -63,7 +63,7 @@ our Fortran IRC fit code is currently interfaced only to GAMESS electronic struc
 
  Input data below this line.
 
-&keys zn =.true. zpe = 2 printmore = .true. extern = .true. &end
+&keys zn =.true. zpe = 2 printmore = .true. externR = .true. &end
 
 &inputdata
 !315.34 of freR removed as incorrect.
@@ -75,6 +75,7 @@ inertR = 506.04177, 555.10828, 1052.70339
 enX = -1355.02117860      !energy of MECP in hartree 
 enR = -1355.03569230      !energy of reactant in hartree
 maxn = 1000 ! all calculations are in tunneling regime
+Estep=1
 &end
 
 &external

@@ -1,0 +1,33 @@
+Welcome to the pyMECP program!
+This file discusses a particular aspect of the program. 
+Please, consult the Manual for a detailed instruction on how to run pyMECP. 
+
+The pyMECP program workflow is as follows:
+
+1. Submit two single-point energy calculation jobs, JobN_A.inp and JobN_B.inp
+2. Wait for both jobs to complete.
+3. Update the next geometry based on the energy and gradients extracted from JobN_A.engrad and JobN_B.engrad files.
+4. Submit new pair of jobs, JobN+1_A.inp and JobN+1_B.inp
+5. Repeat steps 1-4 until convergence is reached (convergence criteria can be adjusted in TestConvergence.py if needed)
+
+There are two options how the waiting time in Step 2 can be set.
+
+Option 1. Fixed sleep time.
+Allow for a fixed sleep time between two optimization steps (default). 
+In this case search for the "# Wait for jobs to terminate" line in the sub_script.py file and set X in the "sleep(X)" line below
+to the desired sleep time in seconds. For this option, it is highly recommended to run the first Job0_A.inp and Job0_B.inp jobs 
+to estmate the average job_time. Then, for example, X could be set to ~ 1.5 * job_time.
+
+Option 2. Monitor ORCA jobs in queue.
+Allow Python to check if both jobs are terminaed in real time by checking the queue. 
+Then, new jobs will be submitted right after both the previous jobs are terminated (queue is empty). 
+To allow this option search for the "# Wait for submitted jobs" line in sub_script.py and uncomment 
+the "#for jid in jobids:" and "#wait_for_job(jid)" lines below this line. Also, comment the "sleep(X)" line with the "#" sign. 
+This option works fine, though we sometimes observed pyMECP stoped working without an error message, 
+and strongly believe it was caused by some time update-related bugs in our HPC cluster. You could give it a try, and can always switch back to the option 1.
+
+*** OPTIONAL ***
+In the folder "test_heme" you can find output files for an example of finding the MECP between the lowest 
+triplet and quintet states in Fe(II)-porphine molecule also known as heme. This example is covered in the 
+Chapter 8 of the Manual. The "geom", "Input_Header_A", "Input_Header_B", "master_script.py", and "sub_script.py" 
+files are currently adjusted for this example. You can use this example as a starting point for getting started with pyMECP. Good luck!

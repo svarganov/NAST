@@ -37,6 +37,7 @@ enX = 0.103497d0
 enR = 0.0d0
 !maxn=45000 ! Right integration limit.
 maxn = 23000 ! Not enough for convergence in rates. Only for test purposes. 
+Estep=1
 T1=100
 Tstep=100
 T2=2000

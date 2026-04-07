@@ -44,6 +44,33 @@ case $1 in
 
     ;;
 
+ exam03.inp )
+
+ a1_exam03=0.03636
+ b1_exam03=0.29642
+
+ a1=$(grep " a1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ b1=$(grep " b1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ 
+ compare_two $a1_exam03 $a1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $b1_exam03 $b1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam04.inp )
+
+ a1_exam04=0.13604
+ b2_exam04=0.34684
+
+ a1=$(grep " a1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ b1=$(grep " b1 =" $out_dir/${1%.inp}.out | awk '{ print $3 }')
+ b2=$(grep " b2 =" $out_dir/${1%.inp}.out | awk '{ print $6 }')
+ 
+ compare_two $a1_exam04 $a1 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $b2_exam04 $b2 ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
 esac
 
 exit $ierr

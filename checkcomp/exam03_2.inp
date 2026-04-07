@@ -1,0 +1,52 @@
+
+ ******* Example 03_2 ******* 
+
+ November 1, 2021
+ University of Nevada, Reno
+ Varganov Research Group
+
+ This example tests calculation of ISC rate constant with the reduced integration step of 0.5 cm-1 (default is 1 cm-1).
+ Integration step can be any number set via "Estep" in &inputdata.
+ 
+ Based on Harvey, J.N.; and Aschi, M. Phys. Chem. Chem. Phys., 1999, 1, 5555-5563.
+ Spin-forbidden dehydrogenation of triplet methoxy cation. See details in the header of exam03_1.inp and Manual, Chapter #5, example #3_1.
+ This test uses excatly the same input as exam03_1.inp with only the addition of the Estep = 0.5 in &inputdata 
+
+     >>>>> Results at T = 295 K for the 'MECP2' channel >>>>>
+
+     >>>>> Canonical rate constant >>>>>
+
+ LZ formula:    1.06 x 10^1 s-1
+ WC formula:    5.20 x 10^6 s-1
+
+ >>>> Double passage velocity-averaged transition probabilities >>>>
+
+ LZ Maxwell-Boltzmann:   0.0250 
+ LZ Kuki:                0.0066
+
+ Input data below this line 
+
+$keys
+zpe = 1 printmore = .true. &end 
+
+&inputdata
+Estep = 0.5
+freX = 670.56, 1063.90, 1093.35, 1301.17, 1429.34, 2071.39, 2855.30, 2966.86
+freR = 848.04, 853.84, 1121.78, 1122.13, 1229.91, 1238.5, 2676.06, 2683.03, 2685.26 
+inertX = 12.08498, 56.73115, 57.9621
+inertR = 12.15054, 59.52699, 59.53090
+!enX = 0.01893676  !energy of MECP in hartree (in kcal/mol it's 11.8), our result
+enX = 0.022788 !MECP energy in hartree (14.3 in kcal/mol), from Harvey
+enR = 0                      !energy of reactant in hartree
+maxn = 20000
+T1 = 290.0
+T2 = 300.0
+&end
+
+&probability
+redmass = 1.3188641
+soc = 45.7
+grad = 0.1657563917
+gradmean = 0.08190326591
+&end
+

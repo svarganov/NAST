@@ -1,0 +1,12 @@
+cp vib.f90 vib_saved.f90 7/14/2025
+cp driver.f90 driver_saved.f90 7/14/2025
+
+Now need to change reading initial and final geometries form external files
+"initial_geometry.xyz" and "final_geometry.xyz".
+Now initial geometry will be read from "initial_geometry.xyz" not 
+from "geometry_gamess" for GAMESS, "hess_molpro" for Molpro, "geometry_qchem" for Qchem,
+or "hess_orca" for ORCA.
+
+Read atomic data subroutines in rdGAMESS.f90, rdMolpro.f90, rdQChem.f90, and rdORCA.f90
+were cut out 07/14/2025.
+They can be found of necessary in the latest save /scratch/id2392/NAST_new_release_v1/nast/tools/vib_14July2025_before_initial_final_geom_files 

@@ -1,10 +1,13 @@
 module hess_data
 
 implicit none
-logical :: GAMESS, Molpro
+logical :: GAMESS, Molpro, QChem, ORCA
 integer :: m   
 character(len=80) :: low_spin_dat, high_spin_dat, input_geometry,                       & ! GAMESS files
-                     low_spin_grad, high_spin_grad, low_spin_hess, high_spin_hess         ! Molpro files
+                     low_spin_grad, high_spin_grad, low_spin_hess, high_spin_hess,      & ! Molpro files
+                     geometry_in, low_spin_grad_fchk, high_spin_grad_fchk,              & ! QChem files
+                     low_spin_hess_fchk, high_spin_hess_fchk, low_spin_grad_orca,       & ! ORCA files
+                     high_spin_grad_orca, low_spin_hess_orca, high_spin_hess_orca
 !--------------------------------------------------------------------------------------------------------
 character(len=80), allocatable :: array(:)
 character(len=6) :: intersect_type
@@ -12,7 +15,8 @@ character(len=15), dimension(:),  allocatable :: symbol                         
 double precision, dimension(:), allocatable   :: grad1, grad2, charge, deltaG, mass,            &
                                                  freq, e, e_rc, reduced_mass,                   &
                                                  coord_shifted_mw_vec, RM, m_deltaG,            &
-                                                 m_norm_deltaG, Eff_Hess_rc_eig_v_amu, rc_eig_v_amu ! number vectors
+                                                 m_norm_deltaG, Eff_Hess_rc_eig_v_amu, rc_eig_v_amu, & ! number vectors
+                                                 deployed                                     ! deployed added for QChem   
 !---------------------------------------------------------------------------------------------------------
 integer :: number_of_atoms
 double precision :: norm_deltaG, lambda, gradmean, D_HESS, total_mass, e_rc_max,         &
@@ -31,29 +35,37 @@ contains
 subroutine read_input_file()
 
 implicit none
-namelist /programs/ GAMESS, Molpro
+namelist /programs/ GAMESS, Molpro, QChem, ORCA
 namelist /gamess_input_files/ low_spin_dat, high_spin_dat, input_geometry
 namelist /molpro_input_files/ low_spin_grad, high_spin_grad,      &
                               low_spin_hess, high_spin_hess
+namelist /qchem_input_files/  geometry_in, low_spin_grad_fchk, high_spin_grad_fchk, &
+                              low_spin_hess_fchk, high_spin_hess_fchk
+namelist /orca_input_files/   low_spin_grad_orca, high_spin_grad_orca, &
+                              low_spin_hess_orca, high_spin_hess_orca
 !-------------------------------------------------------------------
-read(11, nml = programs)
+read(11, nml = programs) ! 11 is the input_file
 
-if (GAMESS .and. (.not. Molpro)) then
+if (GAMESS .and. (.not. Molpro) .and. (.not. QChem) .and. (.not. ORCA)) then
  m = 1
  write(*,*) "Working with GAMESS input files"
  read(11, nml = gamess_input_files)
-else if (Molpro .and. (.not. GAMESS)) then
+else if (Molpro .and. (.not. GAMESS) .and. (.not. QChem) .and. (.not. ORCA)) then
  m = 2
  write(*,*) "Working with Molpro input files"
  read(11, nml = molpro_input_files)
-else if ((GAMESS .and. Molpro)) then
-  write(*,*) "Error! You chose both GAMESS and Molpro to be TRUE. &
-             Check your input and return"
-  call exit
-else if ((.not. GAMESS) .and. (.not. Molpro)) then
-  write(*,*) "Error! You chose both GAMESS and Molpro to be FALSE.  &
-             Check your input and return"
-  call exit
+else if (QChem .and. (.not. GAMESS) .and. (.not. Molpro) .and. (.not. ORCA)) then
+ m = 3
+ write(*,*) "Working with QChem input files"
+ read(11, nml = qchem_input_files)
+else if (ORCA .and. (.not. GAMESS) .and. (.not. Molpro) .and. (.not. QChem)) then
+ m = 4
+ write(*,*) "Working with ORCA input files"
+ read(11, nml = orca_input_files)
+else
+ write(*,*) "Error! Make a proper selection of a program (GAMESS, Molpro, QChem or ORCA). &
+             Only one program can be used at a time"
+ call exit
 end if 
 
 end subroutine read_input_file

@@ -33,7 +33,7 @@ if (a .le. one) then
 endif
 
 do i=1, maxn
-  bbDia(i)=((dble(i)/autocm-mecp+zpeR-zpeX)*grad)/(2.0*soc*gradmean)
+  bbDia(i)=((dble(i)*Estep/autocm-mecp+zpeR-zpeX)*grad)/(2.0*soc*gradmean)
 enddo
 
 do i=1, maxn
@@ -59,8 +59,8 @@ probLZ = zero
 
 write(66,'(/,A)') "........Landau-Zener"
 
-where (bbDia .gt. zero) probLZ = one-exp(-pi/(2.0*sqrt(bbDia*aaDia)))
-  
+where (bbDia .gt. zero) probLZ = one-exp(-pi/(2.0*sqrt(bbDia*aaDia))) 
+
 end subroutine LZ
 
 ! Landau-Zener double passage for reverse rate constant.
@@ -75,7 +75,7 @@ real(wp), dimension(:), intent(out) :: bbDia_rev,probLZ_rev
 integer                             :: i
 
 do i=1, maxn+binGAP
-  bbDia_rev(i)=((dble(i)/autocm-(enX-enP)+zpeP-zpeX)*grad)/(2.0*soc*gradmean)
+  bbDia_rev(i)=((dble(i)*Estep/autocm-(enX-enP)+zpeP-zpeX)*grad)/(2.0*soc*gradmean)
 enddo
 
 do i=1, maxn+binGAP
@@ -89,9 +89,8 @@ where (bbDia_rev .gt. zero) probLZ_rev = one-exp(-pi/(2.0*sqrt(bbDia_rev*aaDia))
 
 end subroutine LZ_rev
 
-!=====================================================================
-!======================= LANDAU-ZENER SPIN SPLIT =====================
-!=====================================================================
+! Landau-Zener split double passage formula.
+
 subroutine LZS(probLZS)
 !calculates diabatic transition between state specific spin states using double-passage LZ
 !Returns 2d array of transition probabilities.
@@ -105,13 +104,13 @@ allocate (sqnorm(icp))
 allocate (p(icp))
 
 mecp_zpe = mecp - zpeR + zpeX
-const = (-2.0 * pi / grad)
+const = -2.0 * pi / grad
 probLZS = zero
 sqnorm = socmat * conjg(socmat)      !sqnorm is squared norm of spin-orbit matrix elements.
 
 !Starts at the MECP, probabilities below MECP are zero.
 do i = binX, maxn
-   lz_coeff = redmass / (2.0 * (dble(i)/autocm - mecp_zpe))
+   lz_coeff = redmass / (2.0 * (dble(i)*Estep/autocm - mecp_zpe))
    lz_coeff = const * sqrt(lz_coeff)
    p = sqnorm * lz_coeff
    p = exp(p)
@@ -120,6 +119,47 @@ do i = binX, maxn
 end do
 
 end subroutine LZS
+
+subroutine LZM(probLZM)
+! Mix (spin-orbit + Zeeman interactions) Landau-Zener single-passage formula.
+! Calculates transitions between states using single-passage LZ
+! Returns 2d array of transition probabilities.
+! Requires sp = .true.
+integer               :: i
+real(wp)              :: const, mecp_zpe, e1, e2, e3
+real(wp), dimension(:,:), intent(out) :: probLZM
+real(wp), allocatable, dimension(:,:) :: p
+
+allocate(p(maxn,3))
+mecp_zpe = mecp - zpeR + zpeX 
+const = (sqrt(redmass / 8.0) * pi / grad)
+p = one
+probLZM = zero
+
+! Starts at the MECP, probabilities below MECP are zero.
+do i = binX1, maxn           
+  e1 = const * delta(1)**2.0/ sqrt (dble(i)*Estep/autocm - mecp_zpe + g*mu/autocm*Bz/2.0)
+  p(i,1) = exp(-e1)                     
+end do
+
+do i = binX, maxn
+  e2 = const * delta(2)**2.0/ sqrt (dble(i)*Estep/autocm - mecp_zpe)
+  p(i,2) = exp(-e2)                      
+end do
+
+do i = binX3, maxn
+  e3 = const * delta(1)**2.0/ sqrt (dble(i)*Estep/autocm - mecp_zpe - g*mu/autocm*Bz/2.0)
+  p(i,3) = exp(-e3)                       
+end do
+
+do i = 1, maxn
+  probLZM(i,1) = one - p(i,1) 
+  probLZM(i,2) = p(i,1)*(one - p(i,2))
+  probLZM(i,3) = p(i,1)*p(i,2)*(one - p(i,3)) 
+  probLZM(i,4) = one - (p(i,1)*p(i,2)*p(i,3))                       
+end do
+
+end subroutine LZM
 
 ! Weak Coupling double passage formula.
 
@@ -135,7 +175,7 @@ subroutine WC(aaDia,bbDia,  probWC)
 probWC    = zero
 airytemp  = zero
 airyvalue = (zero,zero)
- 
+
 write(66,'(/,a,/,a)') "Warning! Rate calculations using transition probabilities that account",&
                       "for quantum tunneling should be run with caution."
 write(66,'(a)') "Make sure that in a reaction studied, reactant lies higher in energy than product."
@@ -151,7 +191,8 @@ do i=1, maxn
     probWC(i) = pi**2.0*aaDia**(-2.0/3.0)*(abs(airyvalue))**2.0
     if (probWC(i) .gt. one) then
       write(66,'(A,I5,A)') 'Unphysical WC probability greater than 1.0 at ',i,' cm-1'
-      stop   
+      write(66,'(A,I5,A)') 'WC rates should be used with caution. LZ rates are still valid.'
+      exit   
     endif
   end if
 end do
@@ -177,7 +218,7 @@ real(wp), dimension(:), intent(out) :: probWC_rev
 probWC_rev    = zero
 airytemp      = zero
 airyvalue     = (zero,zero)
- 
+
 write(66,'(A)') "..........Weak Coupling for reverse rate constant."
 
 do i = 1, maxn+binGAP            
@@ -187,7 +228,8 @@ do i = 1, maxn+binGAP
     probWC_rev(i) = pi**2.0*aaDia**(-2.0/3.0)*(abs(airyvalue))**2.0
     if (probWC_rev(i) .gt. one) then
       write(66,'(A,I5,A)') 'Unphysical WC probability greater than 1.0 at ',i,' cm-1 in reverse direction.'
-      stop   
+      write(66,'(A,I5,A)') 'WC rates should be used with caution. LZ rates are still valid.'
+      exit   
     endif
   end if
 end do
@@ -195,6 +237,39 @@ end do
 probWC_rev(1:binGAP) = zero
 
 end subroutine WC_rev
+
+! Weak Coupling Split double passage formula.
+subroutine WCS(probWCS)
+!Returns 2d array of transition probabilities.
+!Requires sp = .true.
+ integer                             :: i, NZ, IERR
+ real(wp)                            :: AII, mecp_zpe
+ real(wp), allocatable               :: sqnorm(:), aD(:), airytemp(:), bD(:)
+ complex(wp)           :: airyvalue
+ real(wp), dimension(:,:), intent(out) :: probWCS
+
+allocate (sqnorm(icp))
+allocate (aD(icp))
+allocate (airytemp(icp))
+allocate (bD(icp))
+
+probWCS    = zero
+airytemp  = zero
+airyvalue = (zero,zero)
+mecp_zpe = mecp - zpeR + zpeX
+sqnorm = socmat * conjg(socmat)      !sqnorm is squared norm of spin-orbit matrix elements.
+sqnorm = sqrt(sqnorm)
+aD = grad*gradmean/(16.0*redmass*sqnorm**3.0)
+
+do i=1, maxn   
+bD=((dble(i)*Estep/autocm-mecp_zpe)*grad)/(2.0*sqnorm*gradmean)
+airytemp = -bD*(aD**(-1.0/3.0))
+  call ZAIRY(airytemp, zero, 0, 1, airyvalue, AII, NZ, IERR)
+  if (NZ .eq. 0 .and. IERR .eq. 0) then
+    probWCS(i,:) = pi**2.0*aD**(-2.0/3.0)*(abs(airyvalue))**2.0
+  end if
+end do
+end subroutine WCS
 
 ! Zhu-Nakamura double passage formula
 
@@ -317,38 +392,109 @@ prob = 0.0
 ! Generates empty probabilities to avoid conflicts with printing data.
 end subroutine LZempty
 
-! Print probabilities of transition.
+subroutine EckartProb(probEckart)
+ implicit none
+ integer                              :: i
+ real(wp)                             :: d_Eckart, cosh_d
+ real(wp), allocatable                :: a_Eckart(:), b_Eckart(:)
+ real(wp), allocatable                :: cosh_a_minus_b(:), cosh_a_plus_b(:)
+ real(wp), dimension(:), intent(out)  :: probEckart
 
-subroutine write_prob(aaDia,bbDia,probLZ,probWC,probZN,probLZS,bbDia_rev,probLZ_rev,probWC_rev)
+ allocate (a_Eckart (maxn))
+ allocate (b_Eckart (maxn))
+ allocate (cosh_a_minus_b (maxn))
+ allocate (cosh_a_plus_b (maxn))
+   
+ a_Eckart = zero
+ b_Eckart = zero
+ d_Eckart = zero
+ cosh_a_minus_b = zero
+ cosh_a_plus_b = zero
+ probEckart = zero
+ cosh_d = zero 
+ d_Eckart=0.5*sqrt((16*(enX-enR+zpeX-zpeR)*(enX-enP+zpeX-zpeP)/(planck_hsec*TST_freq*cmtoHz)**2)-1.0d0)
+ cosh_d=cosh(2*pi*d_Eckart)
+ 
+ do i=1, maxn     
+    a_Eckart(i)=(2*sqrt(dble(i)*Estep/autocm))&
+                 /((planck_hsec*TST_freq*cmtoHz)*((1/sqrt(enX-enR+zpeX-zpeR))+(1/sqrt(enX-enP+zpeX-zpeP))))
+    b_Eckart(i)=(2*sqrt((dble(i)*Estep/autocm)-(enX-enR+zpeX-zpeR)+(enX-enP+zpeX-zpeP)))&
+                 /((planck_hsec*TST_freq*cmtoHz)*((1/sqrt(enX-enR+zpeX-zpeR))+(1/sqrt(enX-enP+zpeX-zpeP))))
+    cosh_a_minus_b(i)=cosh(2*pi*(a_Eckart(i)-b_Eckart(i)))
+    cosh_a_plus_b(i)=cosh(2*pi*(a_Eckart(i)+b_Eckart(i)))
+    probEckart(i)=1.0d0-(cosh_a_minus_b(i)+cosh_d)/(cosh_a_plus_b(i)+cosh_d)
+       
+ end do
+
+end subroutine EckartProb
+
+subroutine EckartProb_rev(probEckart_rev)
+ implicit none
+ integer                              :: i
+ real(wp)                             :: d_Eckart, cosh_d
+ real(wp), allocatable                :: a_Eckart(:), b_Eckart(:)
+ real(wp), allocatable                :: cosh_a_minus_b(:), cosh_a_plus_b(:)
+ real(wp), dimension(:), intent(out)  :: probEckart_rev
+
+ allocate (a_Eckart (maxn+binGAP))
+ allocate (b_Eckart (maxn+binGAP))
+ allocate (cosh_a_minus_b (maxn+binGAP))
+ allocate (cosh_a_plus_b (maxn+binGAP))
+   
+ a_Eckart = zero
+ b_Eckart = zero
+ d_Eckart = zero
+ cosh_a_minus_b = zero
+ cosh_a_plus_b = zero
+ probEckart_rev = zero
+ cosh_d = zero 
+ d_Eckart=0.5*sqrt((16*(enX-enR+zpeX-zpeR)*(enX-enP+zpeX-zpeP)/(planck_hsec*TST_freq*cmtoHz)**2)-1.0d0)
+ cosh_d=cosh(2*pi*d_Eckart)
+ 
+ do i=1+binGAP, maxn+binGAP     
+    a_Eckart(i)=(2*sqrt(dble(i)*Estep/autocm))&
+                 /((planck_hsec*TST_freq*cmtoHz)*((1/sqrt(enX-enR+zpeX-zpeR))+(1/sqrt(enX-enP+zpeX-zpeP))))
+    b_Eckart(i)=(2*sqrt((dble(i)*Estep/autocm)-(enX-enP+zpeX-zpeP)+(enX-enR+zpeX-zpeR)))&
+                 /((planck_hsec*TST_freq*cmtoHz)*((1/sqrt(enX-enR+zpeX-zpeR))+(1/sqrt(enX-enP+zpeX-zpeP))))
+    cosh_a_minus_b(i)=cosh(2*pi*(a_Eckart(i)-b_Eckart(i)))
+    cosh_a_plus_b(i)=cosh(2*pi*(a_Eckart(i)+b_Eckart(i)))
+    probEckart_rev(i)=1.0d0-(cosh_a_minus_b(i)+cosh_d)/(cosh_a_plus_b(i)+cosh_d)
+       
+ end do
+
+end subroutine EckartProb_rev
+
+subroutine write_prob(aaDia,bbDia,probLZ,probLZ_rev,probLZS,probLZM,probWC,probWC_rev,probWCS,probZN,bbDia_rev)
 implicit none
  
 real(wp),                 intent(in) :: aaDia
 real(wp), dimension(:),   intent(in) :: bbDia, probLZ, probWC, probZN
-real(wp), dimension(:,:), intent(in) :: probLZS
+real(wp), dimension(:,:), intent(in) :: probLZS, probLZM, probWCS
 real(wp), dimension(:),   intent(in) :: bbDia_rev, probLZ_rev, probWC_rev
 integer                              :: i
 
 open(15,file='energy_probabilities.out')
 write(15,*) "Double Passage Transition Probabilities."
    
-if (.not. zn) then
-  write(15,'(A,7x,A,7x,A)') "Energy(cm-1)","Landau-Zener","Weak Coupling" 
-  do i=1,maxn
-    write (15,'(I6,2es24.5)') i, probLZ(i), probWC(i)
-  end do
-else
-  write(15,'(A,7x,A,7x,A,7x,A)') "Energy(cm-1)","Landau-Zener","Weak Coupling","Zhu-Nakamura"
-  do i=1,maxn
-    write (15,'(I6,3es24.5)') i, probLZ(i), probWC(i),probZN(i)
-  end do
-end if
+ if (.not. zn) then
+   write(15,'(25x,A,7x,A,7x,A)') "Energy(cm-1)","Landau-Zener","Weak Coupling" 
+   do i=1,maxn
+     write (15,'(F30.3,2es24.5)') i*Estep, probLZ(i), probWC(i)
+   end do
+ else
+   write(15,'(A,7x,A,7x,A,7x,A)') "Energy(cm-1)","Landau-Zener","Weak Coupling","Zhu-Nakamura"
+   do i=1,maxn
+     write (15,'(F30.3,3es24.5)') i*Estep, probLZ(i), probWC(i),probZN(i)
+   end do
+ end if
  
-close(15)
+ close(15)
+
 
 if (sp) then
-  open(16,file='split_probabilities.out')
-  write(16,'(a)') "Double passage transition probabilities between two Ms spin states"
-  write(16, '(a)', advance="no") "Energy (cm-1)"
+  open(16,file='split_LZ_probabilities.out')
+  write(16,'(a)') "Double passage LZ transition probabilities between two Ms spin states"
+  write(16, '(25x,a)', advance="no") "Energy (cm-1)"
   write(16, '(4x,I2,a,I2,a,I2,a,I2)', advance="no") mults(1), " _", 1, &
                                     " ->", mults(2), " _", 1
   do i=2, icp
@@ -358,30 +504,86 @@ if (sp) then
   write(16,'(/)')
 
   do i=1,maxn
-    write (16,*) i, probLZS(i,:)
+    write (16,'(F30.3,2es24.7)') i*Estep, probLZS(i,:)
   end do
 
-close(16)
+  close(16)
+
+  open(17,file='Bz_LZ_probabilities.out')
+  write(17,*) "Single-passage Landau-Zener transition probabilities &
+  (spin-orbit and magnetic field only in z direction)"
+  write(17,'(20x,a,12x,a,17x,a,17x,a,17x,a)') "Energy(cm-1)", &
+  "P1(Bz)","P2(Bz)","P3(Bz)","1-p1.p2.p3=P1+P2+P3(Bz)"
+  do i=1,maxn
+    write (17,'(F30.3,4es24.7)') i*Estep, probLZM(i,:)
+  end do
+  close(17)
+
+  open(18,file='split_WC_probabilities.out')
+  write(18,'(a)') "Double passage WC transition probabilities between two Ms spin states"
+  write(18, '(25x,a)', advance="no") "Energy (cm-1)"
+  write(18, '(4x,I2,a,I2,a,I2,a,I2)', advance="no") mults(1), " _", 1, &
+                                    " ->", mults(2), " _", 1
+  do i=2, icp
+    write(18, '(11x,I2,a,I2,a,I2,a,I2)', advance="no") mults(1), " _", 1+floor((real(i)-1)/3), &
+                                    " ->", mults(2), " _", mod(i-1,3)+1+floor((real(i)-1)/3)
+  end do
+  write(18,'(/)')
+
+  do i=1,maxn
+    write (18,'(F30.3,2es24.7)') i*Estep, probWCS(i,:)
+  end do
+  close(18)
 
 end if
 
 if (rev) then
-  open(17,file='energy_probabilities_rev.out')
-  write(17,'(a)') "Double passage LZ and WC transition probabilities in reverse direction."
-  write(17,'(a,7x,a,7x,a,7x,a)') "Energy(cm-1)","b^2 diabatic","Landau-Zener","Weak Coupling"
+  open(20,file='energy_probabilities_rev.out')
+  write(20,'(a)') "Double passage LZ and WC transition probabilities in reverse direction."
+  write(20,'(25x,a,7x,a,7x,a,7x,a)') "Energy(cm-1)","b^2 diabatic","Landau-Zener","Weak Coupling"
   do i = 1, maxn+binGAP
-    write (17,'(i6,3es24.5)') i, bbDia_rev(i), probLZ_rev(i), probWC_rev(i)
+    write (20,'(F30.3,3es24.5)') i*Estep, bbDia_rev(i), probLZ_rev(i), probWC_rev(i)
   end do
+  close(20)
 end if
 
 end subroutine write_prob
 
+subroutine write_prob_TST(probEckart, probEckart_rev)
+implicit none
+ 
+real(wp), dimension(:),   intent(in) :: probEckart, probEckart_rev
+integer                              :: i
+
+open(18,file='TST_energy_probabilities.out')
+write(18,*) "Eckart Tunneling Probability."
+   
+write(18,'(25x,A,7x,A)') "Energy(cm-1)","Probability" 
+do i=1,maxn
+  write (18,'(F30.3,es24.5)') i*Estep, probEckart(i)
+end do
+ 
+close(18)
+
+if (rev) then
+
+  open(27,file='TST_energy_probabilities_rev.out')
+  write(27,'(A)') "Eckart Tunneling Probability in Reverse Direction."
+
+  write(27,'(25x,A,7x,A)') "Energy(cm-1)","Probability"
+  do i = 1, maxn+binGAP
+    write (27,'(F30.3,es24.5)') i*Estep, probEckart_rev(i)
+  end do
+
+ close(27)
+
+end if
+
+end subroutine write_prob_TST
 
 ! Velocity-averaged transition probabilities (VATP).
-
 ! Calculate LZ and WC velocity-averaged probabilities
 ! using Maxwell-Boltzmann and Kuki normalized distributions.
-
 subroutine VATP()
 
  integer        :: i

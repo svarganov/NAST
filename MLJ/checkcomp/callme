@@ -1,0 +1,50 @@
+#!/bin/bash
+
+name=$1
+out_dir=$2
+ierr=0
+tmp=0
+
+function compare_two() {
+
+diff=$(echo $1 $2 | awk '{ if($1>$2) print $1-$2 ; else print $2-$1 }')
+res=$(echo $diff $3 | awk '{ if($1>$2) print 1 ; else print 0 }')
+
+return $res
+
+}
+
+
+case $1 in
+
+ exam01.inp )
+ 
+ k_MLJ_exam01=5.41E+12    ; tol=1E+10
+
+ k_MLJ=$(grep -m1 " 300.0 " $out_dir/MLJ.out | awk '{ printf "%12.10e\n", $2 }')
+
+ compare_two $k_MLJ_exam01 $k_MLJ $tol ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;;
+
+ exam02.inp )
+ 
+ k_MLJ_exam02=2.74E+09    ; tol=1E+07
+
+ k_MLJ=$(grep -m1 " 300.0 " $out_dir/MLJ.out | awk '{ printf "%12.10e\n", $2 }')
+
+ compare_two $k_MLJ_exam02 $k_MLJ $tol ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+   ;; 
+
+ * )
+ 
+   echo "Unrecognized file"
+
+ ierr=1
+
+    ;;
+
+esac
+
+exit $ierr

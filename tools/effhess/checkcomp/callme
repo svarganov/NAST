@@ -15,7 +15,7 @@ return $res
 }
 
 
-case $1 in
+case $name in
 
  exam01.com )
  
@@ -67,6 +67,32 @@ case $1 in
  compare_two $RM_ex04 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
  compare_two $ZPE_ex04 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
     
+    ;;
+
+ exam05.com )
+    
+ RM_ex05=2.5925
+ ZPE_ex05=31.132
+
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+
+ compare_two $RM_ex05 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex05 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
+    ;;
+
+ exam06.com )
+    
+ RM_ex06=2.5917
+ ZPE_ex06=31.146
+
+ RM=$(grep "Reduced mass" $out_dir/${1%.com}.out | awk '{ print $7 }')
+ ZPE=$(grep "zpe in " $out_dir/${1%.com}.out | awk '{ print $5 }')
+
+ compare_two $RM_ex06 $RM ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+ compare_two $ZPE_ex06 $ZPE ; tmp=$(echo $?) ; ierr=$((ierr + tmp)) ; tmp=0
+
     ;;
 
  * )

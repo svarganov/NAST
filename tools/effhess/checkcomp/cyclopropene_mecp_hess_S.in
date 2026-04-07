@@ -1,0 +1,33 @@
+$comment
+Geometry is taken as is from /home/seva/comp/cyclopropene/mecp_cyclo.log
+$end
+
+$molecule
+0 1
+C        0.000417251         0.023477805        -0.727075013
+C       -0.811542633         0.391829636         0.436824334
+C        0.812300919         0.391911037         0.436415492 
+H        0.001529255        -0.951971917        -1.205710612
+H       -0.002009902         0.844830500        -1.466911614
+H       -1.453261603        -0.349409590         0.904452633
+H        1.452566712        -0.350667470         0.904008075
+$end
+
+$rem
+JOBTYPE  FREQ
+METHOD   B3LYP
+BASIS    cc-pVTZ
+THRESH    14
+IQMOL_FCHK  TRUE
+PRINT_ORBITALS TRUE
+INCDFT          FALSE
+PRINT_INPUT     TRUE
+SYM_IGNORE    TRUE
+SYMMETRY      FALSE
+MAX_SCF_CYCLES        1500
+XC_GRID   00096000302
+SCF_CONVERGENCE 7
+MEM_TOTAL 10000
+DFT_D   D3_ZERO
+$end
+
