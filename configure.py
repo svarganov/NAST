@@ -27,7 +27,7 @@ def parse_argument_list():
            metavar='STRING')
     group.add_argument('--fcflags',
            action='store',
-           default='-O0 -g -fcheck=bounds -fcheck=all -C -fallow-argument-mismatch',
+           default='-O0 -g -fcheck=bounds -fcheck=all -C',
            help='FC flags [default: -O0 -g -fcheck=bounds -fcheck=all -C]',
            metavar='STRING')
    

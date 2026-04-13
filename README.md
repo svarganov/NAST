@@ -2,7 +2,7 @@
 This is the nonadiabatic statistical theory (NAST) package for predicting kinetics of spin-dependent processes, including intersystem crossings, spin-forbidden reactions, and spin crossovers. The NAST package can calculate the probabilities and rates of transitions between the electronic states of different spin multiplicities. Both the microcanonical (energy dependent) and canonical (temperature dependent) rate constants can be obtained. Quantum effects, including tunneling, zero-point vibrational energy, and reaction path interference can be accounted for. In the limit of an adiabatic reaction proceeding on a single electronic state, NAST reduces to the traditional transition state theory.  
 
 # Citation
-If you use the NAST package, please cite the following publications:
+If you use the NAST package, please site some of the following publications:
 
 1. Rooein, M.; Varganov, S. A. Predicting Kinetics of Spin-Dependent Reactions in an External Magnetic Field with Nonadiabatic Statistical Theory. J. Chem. Phys. 2024, 161, 164306. https://doi.org/10.1063/5.0232469.
 

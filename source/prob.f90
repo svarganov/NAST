@@ -242,7 +242,7 @@ end subroutine WC_rev
 subroutine WCS(probWCS)
 !Returns 2d array of transition probabilities.
 !Requires sp = .true.
- integer                             :: i, NZ, IERR
+ integer                             :: i, j, NZ, IERR
  real(wp)                            :: AII, mecp_zpe
  real(wp), allocatable               :: sqnorm(:), aD(:), airytemp(:), bD(:)
  complex(wp)           :: airyvalue
@@ -264,10 +264,12 @@ aD = grad*gradmean/(16.0*redmass*sqnorm**3.0)
 do i=1, maxn   
 bD=((dble(i)*Estep/autocm-mecp_zpe)*grad)/(2.0*sqnorm*gradmean)
 airytemp = -bD*(aD**(-1.0/3.0))
-  call ZAIRY(airytemp, zero, 0, 1, airyvalue, AII, NZ, IERR)
-  if (NZ .eq. 0 .and. IERR .eq. 0) then
-    probWCS(i,:) = pi**2.0*aD**(-2.0/3.0)*(abs(airyvalue))**2.0
-  end if
+  do j=1, size(airytemp)
+     call ZAIRY(airytemp(j), zero, 0, 1, airyvalue, AII, NZ, IERR)
+     if (NZ .eq. 0 .and. IERR .eq. 0) then
+       probWCS(i,:) = pi**2.0*aD**(-2.0/3.0)*(abs(airyvalue))**2.0
+     end if
+  end do
 end do
 end subroutine WCS
 
@@ -685,7 +687,7 @@ function f07 (x)
 airytemp  = 0.0
 airyvalue = (0.0,0.0) 
 airytemp = -0.5*(x**2)*redmass*(((2*redmass*grad**2)/gradmean**4)**(1.0/3.0))
-call ZAIRY(airytemp, 0.0, 0, 1, airyvalue, AII, NZ, IERR)
+call ZAIRY(airytemp, zero, 0, 1, airyvalue, AII, NZ, IERR)
 f07 = ((abs(airyvalue))**2.0)*exp(-(dble(x)**2)/(2*kbt))   
 return
 
@@ -701,7 +703,7 @@ function f08 (x)
 airytemp  = 0.0
 airyvalue = (0.0,0.0)
 airytemp = -0.5*(x**2)*redmass*(((2*redmass*grad**2)/gradmean**4)**(1.0/3.0))
-call ZAIRY(airytemp, 0.0, 0, 1, airyvalue, AII, NZ, IERR)
+call ZAIRY(airytemp, zero, 0, 1, airyvalue, AII, NZ, IERR)
 f08 = ((abs(airyvalue))**2.0)*(x**2)*exp(-(dble(x)**2)/(2*kbt))   
 return
 
