@@ -29,6 +29,7 @@ However, we use the soc value of 189 cm-1 as in the energy range of interest.
 The 1-D crossing potentials, fitted to Molpro IRC points, were obtained using our Matlab prototype code, because
 our Fortran IRC fit code is currently interfaced only to GAMESS electronic structure program.
 
+Check NAST Manual, Chapter 6, example #5 for details.
  
    >>>>> Microcanonical rates at lowest vibrational states of T1 <<<<<
 

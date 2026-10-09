@@ -15,6 +15,7 @@ Our calculations employed B3LYP/cc-pVTZ level of theory as implemented in GAMESS
 Calculation of the Effective Hessian predicted sloped-type intersystem crossing.
 Therefore, we test Zhu-Nakamura probability in this example.
 
+Check NAST Manual, Chapter 6, example #6 for details.
  	
    	   >>>>> NAST results <<<<<
 

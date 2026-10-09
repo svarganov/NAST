@@ -14,7 +14,7 @@
  to the QM rate constants with Eckart tunneling correction calculated with MESMER 6.0 (downloaded February 23, 2021i for Windows)
  using MESMER's data from "examples" folder. Input data was taken from "cis_to_trans_But-2-ene.xml". 
  Results are given in mesmer.test after executing the program.
- Check NAST Manual, Chapter 5, example #02_3 for more details.
+ Check NAST Manual, Chapter 6, example #2 for more details.
 
  For calcualting Wigner and Eckart rate constants tunneling the absolute value of the transition (imaginry) frequency at 
  the transition state must be provided with TST_freq in &inputdata. In this example, an aritrary transition frequency of

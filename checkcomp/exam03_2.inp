@@ -9,7 +9,7 @@
  Integration step can be any number set via "Estep" in &inputdata.
  
  Based on Harvey, J.N.; and Aschi, M. Phys. Chem. Chem. Phys., 1999, 1, 5555-5563.
- Spin-forbidden dehydrogenation of triplet methoxy cation. See details in the header of exam03_1.inp and Manual, Chapter #5, example #3_1.
+ Spin-forbidden dehydrogenation of triplet methoxy cation. See details in the header of exam03_1.inp and Manual, Chapter #6, example #3.
  This test uses excatly the same input as exam03_1.inp with only the addition of the Estep = 0.5 in &inputdata 
 
      >>>>> Results at T = 295 K for the 'MECP2' channel >>>>>

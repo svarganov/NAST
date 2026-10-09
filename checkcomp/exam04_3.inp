@@ -31,7 +31,7 @@
  In this example, the value of the magnetic field is not 0 (Bz /= 0), as for the Approach I discussed in the previous
  test (exam05_1.inp). This run requires sp=.t. in the "keys" group and the "split" group.
 
- For more information, see Manual, Chapter #5, example #10.
+ For more information, see Manual, Chapter #6, example #4.
 
        >>>>> NAST results at T = 296 K <<<<<
 

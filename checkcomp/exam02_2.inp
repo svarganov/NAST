@@ -11,7 +11,7 @@
  to rate constants calculated with MESMER 6.0 (downloaded February 23, 2021i for Windows) using
  MESMER's data from "examples" folder. Input data was taken from "cis_to_trans_But-2-ene.xml".
  Results are given in mesmer.test after executing the program.
- Check NAST Manual, Chapter 5, example #2 for details.
+ Check NAST Manual, Chapter 6, example #2 for details.
 
   >>>>> Canonical TST rate constants at various temperatures (given maxn = 45000) <<<<<
 
